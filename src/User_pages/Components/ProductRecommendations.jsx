@@ -12,12 +12,11 @@ function ProductRow({ title, products }) {
   return (
     <section className="mt-10 sm:mt-12">
       <h2 className="font-bodoni text-2xl text-ink sm:text-3xl">{title}</h2>
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="storefront-products-grid mt-4">
         {products.map((product) => (
           <CollectionProductCard
             key={product.id}
             product={product}
-            compact
             saved={isInWishlist(product.id)}
             onToggleWishlist={() =>
               toggle({
@@ -41,7 +40,7 @@ function ProductRecommendations({ currentProduct }) {
   if (!related.length && !recentlyViewed.length) return null
 
   return (
-    <div className="section-container border-t border-[#eadfc9] pt-8">
+    <div className="section-container storefront-feed--compact border-t border-[#eadfc9] pt-8">
       <ProductRow title="You may also like" products={related} />
       <ProductRow title="Recently viewed" products={recentlyViewed} />
     </div>

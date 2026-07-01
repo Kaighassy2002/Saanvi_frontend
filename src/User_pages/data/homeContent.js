@@ -83,4 +83,11 @@ export const DEFAULT_HOME_SECTIONS = {
     searchPlaceholder: 'Search necklaces, rings, bridal sets…',
     chips: [{ label: 'New arrivals', link: '/collections?sort=latest', highlight: true }],
   },
+  mobileDiscover: {
+    overline: 'Handpicked for you',
+    title: 'Discover more',
+    linkLabel: 'View all',
+    linkUrl: '/collections',
+    ctaLabel: 'Browse all jewellery',
+  },
 }

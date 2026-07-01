@@ -4,14 +4,11 @@ import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { STORE_NAME } from '../../services/storefrontConstants'
 import SiteHeader from '../Components/SiteHeader'
 import Footer from '../Components/Footer'
-import HomeHeroSlider from '../Components/HomeHeroSlider'
-import HomeServiceBar from '../Components/HomeServiceBar'
-import HomePromoBanners from '../Components/HomePromoBanners'
-import HomeTrendingProducts from '../Components/HomeTrendingProducts'
-import HomePopularCategories from '../Components/HomePopularCategories'
 import HomeMobileView from '../Components/home/HomeMobileView'
+import HomeDesktopView from '../Components/home/HomeDesktopView'
 
 import '../Styles/home-jewelsium.css'
+import '../Styles/home-desktop.css'
 import '../Styles/home-mobile.css'
 
 function Home() {
@@ -27,17 +24,7 @@ function Home() {
     <div id="main-content" className="page-shell page-shell--jewelsium" tabIndex={-1}>
       <SiteHeader showSearch showAnnouncement />
 
-      {isDesktop ? (
-        <div className="home-view--desktop">
-          <HomeHeroSlider />
-          <HomeServiceBar />
-          <HomePromoBanners />
-          <HomeTrendingProducts />
-          <HomePopularCategories />
-        </div>
-      ) : (
-        <HomeMobileView />
-      )}
+      {isDesktop ? <HomeDesktopView /> : <HomeMobileView />}
 
       <Footer />
     </div>

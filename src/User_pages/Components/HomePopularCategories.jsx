@@ -1,20 +1,31 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useShopCategories } from '../../hooks/useShopCategories'
+import { useCatalog } from '../../hooks/useCatalog'
+import { useStoreSettings } from '../../context/storeSettingsContext'
 import { useHomeContent } from '../../hooks/useHomeContent'
 import { categoryCollectionHref } from '../data/shopNav'
+import { buildHomeCategoryDisplayList } from '../../services/shopCategories'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { productImageUrl } from '../../utils/cloudinaryImage'
 
 function HomePopularCategories() {
   const ref = useScrollReveal()
-  const { categories, loading } = useShopCategories()
+  const { categories, loading: categoriesLoading } = useShopCategories()
+  const { products, loading: catalogLoading } = useCatalog()
+  const { homeCategoryImages } = useStoreSettings()
   const { homeSections } = useHomeContent()
   const copy = homeSections.categories || {}
-  const display = categories.slice(0, 6)
+
+  const display = useMemo(
+    () => buildHomeCategoryDisplayList(categories, products, homeCategoryImages, 6),
+    [categories, products, homeCategoryImages]
+  )
+
+  const loading = categoriesLoading || (catalogLoading && display.length === 0)
 
   return (
-    <section ref={ref} className="section-reveal border-t border-[#ebebeb] bg-[#fafafa] py-12 sm:py-16">
+    <section ref={ref} className="section-reveal border-t border-border bg-surface-warm py-12 sm:py-16">
       <div className="section-container">
         {copy.overline ? <p className="text-overline text-center">{copy.overline}</p> : null}
         {copy.title ? (
@@ -58,7 +69,7 @@ function HomePopularCategories() {
           <div className="mt-12 text-center">
             <Link
               to={copy.buttonLink || '/collections'}
-              className="inline-flex min-h-[44px] items-center bg-[#1f1514] px-10 py-3 font-sans text-xs font-medium uppercase tracking-[0.14em] text-white transition hover:bg-[#3a151d]"
+              className="inline-flex min-h-[44px] items-center bg-ink px-10 py-3 font-sans text-xs font-medium uppercase tracking-[0.14em] text-white transition hover:bg-royal-950"
             >
               {copy.buttonLabel}
             </Link>

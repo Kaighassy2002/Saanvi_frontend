@@ -13,7 +13,7 @@ export default function ColorVariantPicker({ options, selectedName, onSelect, la
   return (
     <div className="product-detail__color-variants">
       <p className="product-detail__variant-label">
-        Selected {label}: <span className="font-medium text-ink">{selectedLabel || '—'}</span>
+        {label}: <strong>{selectedLabel || '—'}</strong>
       </p>
       <div className="product-detail__color-swatches" role="listbox" aria-label={`Select ${label}`}>
         {options.map((option) => {

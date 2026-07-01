@@ -58,6 +58,16 @@ export async function fetchBestSellers(limit = 10) {
   return Array.isArray(data?.products) ? data.products : []
 }
 
+/** Published catalog pool for home discover / browse grids (API + local). */
+export async function fetchBrowseProducts(poolLimit = 32) {
+  if (USE_LOCAL_API) {
+    return getPublicProductsLocal()
+  }
+  const data = await jewelleryFetch('/api/products')
+  const products = Array.isArray(data?.products) ? data.products : []
+  return products.slice(0, poolLimit)
+}
+
 export async function fetchRelatedProducts(productId, limit = 4) {
   if (USE_LOCAL_API) {
     const catalog = getPublicProductsLocal()

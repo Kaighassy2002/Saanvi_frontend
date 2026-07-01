@@ -3,47 +3,58 @@ import { Link } from 'react-router-dom'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useHomeContent } from '../../hooks/useHomeContent'
 import { productImageUrl } from '../../utils/cloudinaryImage'
+import HomeDesktopSectionHeader from './home/HomeDesktopSectionHeader'
 
 function HomePromoBanners() {
   const ref = useScrollReveal()
   const { promoBanners, homeSections } = useHomeContent()
-  const { overline, title } = homeSections.promo || {}
+  const promoCopy = homeSections.promo || {}
+  const mobilePromoCopy = homeSections.mobilePromos || {}
+
+  if (!promoBanners.length) return null
 
   return (
-    <section ref={ref} className="section-container section-reveal py-10 sm:py-14">
-      <div className="mb-7 text-center sm:mb-9">
-        {overline ? <p className="text-overline">{overline}</p> : null}
-        {title ? <h2 className="section-heading mt-2">{title}</h2> : null}
-      </div>
-      <div className="grid gap-4 sm:grid-cols-3 sm:gap-5">
-        {promoBanners.map((banner, index) => (
-          <Link
-            key={`${banner.title}-${index}`}
-            to={banner.link}
-            className="jewelsium-promo group relative flex min-h-[200px] flex-col justify-end overflow-hidden bg-[var(--color-surface-warm)] sm:min-h-[240px]"
-          >
-            <img
-              src={productImageUrl(banner.image, 'promo')}
-              alt={banner.title}
-              className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1f1514]/75 via-[#1f1514]/25 to-transparent" />
-            <div className="relative p-5 text-white sm:p-6">
-              {banner.label ? (
-                <p className="font-playfair text-[10px] uppercase tracking-[0.16em] text-white/90 sm:text-xs">
-                  {banner.label}
-                </p>
-              ) : null}
-              <h2 className="mt-1 font-bodoni text-xl font-medium tracking-[0.03em] capitalize text-white sm:text-2xl">
-                {banner.title}
-              </h2>
-              <span className="mt-3 inline-block border-b border-white pb-0.5 font-sans text-xs font-medium uppercase tracking-[0.14em] transition group-hover:border-[#f3d894] group-hover:text-[#f3d894]">
-                {banner.buttonText}
-              </span>
-            </div>
-          </Link>
-        ))}
+    <section
+      ref={ref}
+      className="home-desktop-section home-desktop-section--promo section-reveal"
+      aria-label="Offers and promotions"
+    >
+      <div className="section-container">
+        <HomeDesktopSectionHeader
+          overline={promoCopy.overline || 'Limited time'}
+          title={mobilePromoCopy.title || promoCopy.title || 'Offers for you'}
+          linkLabel={mobilePromoCopy.linkLabel || 'See all'}
+          linkHref={mobilePromoCopy.linkUrl || '/collections'}
+        />
+
+        <div className="home-desktop-promo-grid">
+          {promoBanners.map((banner, index) => (
+            <Link
+              key={`${banner.title}-${index}`}
+              to={banner.link}
+              className="home-desktop-promo group"
+            >
+              <div className="home-desktop-promo__copy">
+                {banner.label ? (
+                  <span className="home-desktop-promo__badge">{banner.label}</span>
+                ) : null}
+                <h3 className="home-desktop-promo__title">{banner.title}</h3>
+                <span className="home-desktop-promo__cta">
+                  {banner.buttonText || 'Shop now'}
+                  <i className="fa-solid fa-arrow-right text-[9px]" aria-hidden />
+                </span>
+              </div>
+              <div className="home-desktop-promo__media">
+                <img
+                  src={productImageUrl(banner.image, 'promo')}
+                  alt={banner.title}
+                  className="home-desktop-promo__img"
+                  loading="lazy"
+                />
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   )

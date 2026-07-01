@@ -5,7 +5,6 @@ import Footer from '../Components/Footer'
 import ProductRecommendations from '../Components/ProductRecommendations'
 import ProductReviews from '../Components/ProductReviews'
 import SiteHeader from '../Components/SiteHeader'
-import TrustStrip from '../Components/TrustStrip'
 import { StarRatingCompact } from '../Components/StarRating'
 import { useProduct } from '../../hooks/useProduct'
 import { useProductReviews } from '../../hooks/useProductReviews'
@@ -29,6 +28,7 @@ import { usePageMeta } from '../../hooks/usePageMeta'
 import { useProductStructuredData } from '../../hooks/useProductStructuredData'
 import { productImageUrl } from '../../utils/cloudinaryImage'
 import '../Styles/product-detail.css'
+import '../Styles/product-feed-card.css'
 
 function formatSpecLabel(key) {
   if (key === 'color') return 'Colour'
@@ -36,15 +36,20 @@ function formatSpecLabel(key) {
   return key.charAt(0).toUpperCase() + key.slice(1)
 }
 
+const TRUST_MINI = [
+  { icon: 'fa-shield-halved', label: 'Secure checkout' },
+  { icon: 'fa-certificate', label: 'Quality assured' },
+  { icon: 'fa-truck-fast', label: 'Fast delivery' },
+  { icon: 'fa-arrow-rotate-left', label: 'Easy returns' },
+]
+
 function PurchaseBlock({
   stock,
   quantity,
   setQuantity,
   addedFeedback,
-  inWishlist,
   onAddToCart,
   onBuyNow,
-  onWishlistToggle,
   className = '',
 }) {
   return (
@@ -56,7 +61,7 @@ function PurchaseBlock({
             type="button"
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             disabled={stock <= 0}
-            className="product-detail__qty-btn rounded-l-full"
+            className="product-detail__qty-btn"
             aria-label="Decrease quantity"
           >
             −
@@ -66,14 +71,14 @@ function PurchaseBlock({
             type="button"
             onClick={() => setQuantity(Math.min(stock, quantity + 1))}
             disabled={stock <= 0}
-            className="product-detail__qty-btn rounded-r-full"
+            className="product-detail__qty-btn"
             aria-label="Increase quantity"
           >
             +
           </button>
         </div>
         {stock > 0 ? (
-          <span className="font-playfair text-xs text-muted">{stock} available</span>
+          <span className="product-detail__qty-available">{stock} available</span>
         ) : null}
       </div>
 
@@ -82,15 +87,15 @@ function PurchaseBlock({
           type="button"
           onClick={onAddToCart}
           disabled={stock <= 0}
-          className="lux-button product-detail__btn-primary w-full disabled:opacity-50 sm:w-auto"
+          className="lux-button product-detail__btn-primary disabled:opacity-50"
         >
           {addedFeedback ? (
             <>
               <i className="fa-solid fa-check mr-1.5" aria-hidden />
-              Added to cart
+              Added to bag
             </>
           ) : (
-            'Add to cart'
+            'Add to bag'
           )}
         </button>
         <button
@@ -100,14 +105,6 @@ function PurchaseBlock({
           className="product-detail__btn-secondary"
         >
           Buy now
-        </button>
-        <button
-          type="button"
-          onClick={onWishlistToggle}
-          className={`product-detail__btn-wishlist ${inWishlist ? 'is-active' : ''}`}
-          aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-        >
-          <i className={`${inWishlist ? 'fa-solid' : 'fa-regular'} fa-heart text-lg`} aria-hidden />
         </button>
       </div>
     </div>
@@ -333,10 +330,8 @@ function ProductDetailView({ product, productId }) {
     quantity,
     setQuantity,
     addedFeedback,
-    inWishlist,
     onAddToCart: handleAddToCart,
     onBuyNow: handleBuyNow,
-    onWishlistToggle: handleWishlistToggle,
   }
 
   const breadcrumbItems = [
@@ -345,155 +340,196 @@ function ProductDetailView({ product, productId }) {
     ...(view.category
       ? [{ label: view.category, to: `/collections?category=${encodeURIComponent(view.category)}` }]
       : []),
-    { label: view.name },
+    {
+      label: view.name.length > 48 ? `${view.name.slice(0, 48)}…` : view.name,
+    },
   ]
 
   return (
     <div id="main-content" className="page-shell product-detail" tabIndex={-1}>
       <SiteHeader />
 
-      <div className="section-container py-5 sm:py-8 lg:py-10">
+      <div className="section-container product-detail__shell py-4 sm:py-6 lg:py-8">
         <Breadcrumbs items={breadcrumbItems} />
 
-        <div className="product-detail__grid mt-6 sm:mt-8">
-          <ProductImageGallery product={galleryProduct} discountPct={discountPct} />
-
-          <div className="product-detail__info">
-            {view.category ? (
-              <Link
-                to={`/collections?category=${encodeURIComponent(view.category)}`}
-                className="product-detail__category"
-              >
-                {view.category}
-              </Link>
-            ) : null}
-
-            <h1 className="product-detail__title">{view.name}</h1>
-
-            {reviewsState.summary.count > 0 ? (
-              <StarRatingCompact
-                average={reviewsState.summary.average}
-                count={reviewsState.summary.count}
-              />
-            ) : null}
-
-            <div className="product-detail__price-block">
-              <div className="product-detail__price-row">
-                <span className="product-detail__price">₹{view.price.toLocaleString()}</span>
-                {discountPct > 0 ? (
-                  <span className="product-detail__discount-badge">{discountPct}% OFF</span>
-                ) : null}
-                {savings > 0 ? (
-                  <>
-                    <span className="price-strike text-base">
-                      ₹{view.originalPrice.toLocaleString()}
-                    </span>
-                    <span className="product-detail__save-badge">
-                      Save ₹{savings.toLocaleString()}
-                    </span>
-                  </>
-                ) : null}
-              </div>
+        <div className="product-detail__layout">
+          <div className="product-detail__grid">
+            <div className="product-detail__gallery-col">
+              <ProductImageGallery product={galleryProduct} discountPct={discountPct} />
             </div>
 
-            {stock <= 0 ? (
-              <p className="product-detail__stock product-detail__stock--out">Out of stock</p>
-            ) : stock <= 5 ? (
-              <p className="product-detail__stock product-detail__stock--low">
-                <i className="fa-solid fa-fire-flame-curved text-xs" aria-hidden />
-                Only {stock} left — order soon
-              </p>
-            ) : (
-              <p className="product-detail__stock product-detail__stock--in">
-                <i className="fa-solid fa-circle-check" aria-hidden />
-                In stock · Ready to ship
-              </p>
-            )}
+            <aside className="product-detail__buy-panel">
+              <div className="product-detail__buy-card">
+                <div className="product-detail__header">
+                  <div className="product-detail__header-top">
+                    {view.category ? (
+                      <Link
+                        to={`/collections?category=${encodeURIComponent(view.category)}`}
+                        className="product-detail__category"
+                      >
+                        {view.category}
+                      </Link>
+                    ) : (
+                      <span />
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleWishlistToggle}
+                      className={`product-detail__btn-wishlist ${inWishlist ? 'is-active' : ''}`}
+                      aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                    >
+                      <i
+                        className={`${inWishlist ? 'fa-solid' : 'fa-regular'} fa-heart`}
+                        aria-hidden
+                      />
+                    </button>
+                  </div>
 
-            {hasColors ? (
-              <ColorVariantPicker
-                options={colorOptions}
-                selectedName={selectedColor}
-                onSelect={setSelectedColor}
-              />
-            ) : null}
+                  <h1 className="product-detail__title">{view.name}</h1>
 
-            {requiresSize ? (
-              <div>
-                <SizeVariantPicker
-                  sizes={sizeOptions}
-                  selectedSize={selectedSize}
-                  onSelect={setSelectedSize}
-                />
-                {product.sizeChart ? (
-                  <button
-                    type="button"
-                    onClick={() => setSizeChartOpen(true)}
-                    className="mt-2 text-xs font-medium text-[#7a2c3a] hover:underline"
-                  >
-                    Size guide — {product.sizeChart.name}
-                  </button>
-                ) : null}
+                  {reviewsState.summary.count > 0 ? (
+                    <div className="product-detail__rating-row">
+                      <StarRatingCompact
+                        average={reviewsState.summary.average}
+                        count={reviewsState.summary.count}
+                      />
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="product-detail__price-block">
+                  <div className="product-detail__price-row">
+                    <span className="product-detail__price">₹{view.price.toLocaleString()}</span>
+                    {discountPct > 0 ? (
+                      <span className="product-detail__discount-badge">{discountPct}% off</span>
+                    ) : null}
+                    {savings > 0 ? (
+                      <>
+                        <span className="product-detail__price-strike">
+                          ₹{view.originalPrice.toLocaleString()}
+                        </span>
+                        <span className="product-detail__save-badge">
+                          Save ₹{savings.toLocaleString()}
+                        </span>
+                      </>
+                    ) : null}
+                  </div>
+
+                  {stock <= 0 ? (
+                    <p className="product-detail__stock product-detail__stock--out">Out of stock</p>
+                  ) : stock <= 5 ? (
+                    <p className="product-detail__stock product-detail__stock--low">
+                      <i className="fa-solid fa-fire-flame-curved text-xs" aria-hidden />
+                      Only {stock} left
+                    </p>
+                  ) : (
+                    <p className="product-detail__stock product-detail__stock--in">
+                      <i className="fa-solid fa-circle-check" aria-hidden />
+                      In stock · Ready to ship
+                    </p>
+                  )}
+                </div>
+
+                <div className="product-detail__options">
+                  {hasColors ? (
+                    <ColorVariantPicker
+                      options={colorOptions}
+                      selectedName={selectedColor}
+                      onSelect={setSelectedColor}
+                    />
+                  ) : null}
+
+                  {requiresSize ? (
+                    <div>
+                      <SizeVariantPicker
+                        sizes={sizeOptions}
+                        selectedSize={selectedSize}
+                        onSelect={setSelectedSize}
+                      />
+                      {product.sizeChart ? (
+                        <button
+                          type="button"
+                          onClick={() => setSizeChartOpen(true)}
+                          className="product-detail__size-guide"
+                        >
+                          Size guide — {product.sizeChart.name}
+                        </button>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+
+                <PurchaseBlock {...purchaseProps} />
+
+                <div className="product-detail__trust-mini" aria-label="Shopping guarantees">
+                  {TRUST_MINI.map((item) => (
+                    <span key={item.label} className="product-detail__trust-item">
+                      <i className={`fa-solid ${item.icon}`} aria-hidden />
+                      {item.label}
+                    </span>
+                  ))}
+                </div>
               </div>
-            ) : null}
+            </aside>
+          </div>
 
-            <PurchaseBlock {...purchaseProps} className="product-detail__purchase--desktop" />
-
-            <SizeChartModal
-              chart={product.sizeChart}
-              open={sizeChartOpen}
-              onClose={() => setSizeChartOpen(false)}
-            />
-
-            <TrustStrip className="product-detail__trust" />
-
-            <p className="product-detail__description">{view.description}</p>
+          <div className="product-detail__story">
+            <div className="product-detail__story-block">
+              <h2 className="product-detail__story-heading">About this piece</h2>
+              <p className="product-detail__description">{view.description}</p>
+            </div>
 
             {specRows.length > 0 || customRows.length > 0 ? (
-              <details className="product-detail__specs" open>
-                <summary>Product details</summary>
-                <dl>
-                  {[...specRows, ...customRows].map(([label, val]) => (
-                    <div key={label} className="product-detail__specs-row">
-                      <dt>{label}</dt>
-                      <dd>{val}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </details>
+              <div className="product-detail__story-block">
+                <details className="product-detail__specs" open>
+                  <summary>Product details</summary>
+                  <dl>
+                    {[...specRows, ...customRows].map(([label, val]) => (
+                      <div key={label} className="product-detail__specs-row">
+                        <dt>{label}</dt>
+                        <dd>{val}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </details>
+              </div>
             ) : null}
           </div>
         </div>
       </div>
+
+      <SizeChartModal
+        chart={product.sizeChart}
+        open={sizeChartOpen}
+        onClose={() => setSizeChartOpen(false)}
+      />
 
       <ProductRecommendations currentProduct={view} />
 
       <ProductReviews productId={view.id} reviewsState={reviewsState} />
 
       <div className="sticky-buy-bar sticky-buy-bar--with-nav lg:hidden">
-        <div className="mx-auto flex max-w-lg items-center gap-2">
-          <div className="min-w-0 flex-1">
-            <p className="truncate font-playfair text-[10px] text-muted">Total</p>
-            <p className="font-bodoni text-base text-ink">
+        <div className="product-detail__sticky mx-auto max-w-lg">
+          <div className="product-detail__sticky-price">
+            <p className="product-detail__sticky-label">Total</p>
+            <p className="product-detail__sticky-total">
               ₹{(view.price * quantity).toLocaleString()}
             </p>
           </div>
-          <div className="flex items-center rounded-full border border-[#d6c0a2] bg-white">
+          <div className="product-detail__sticky-qty">
             <button
               type="button"
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
               disabled={stock <= 0}
-              className="flex h-8 w-8 items-center justify-center text-sm"
               aria-label="Decrease"
             >
               −
             </button>
-            <span className="w-7 text-center text-xs font-playfair">{quantity}</span>
+            <span>{quantity}</span>
             <button
               type="button"
               onClick={() => setQuantity(Math.min(stock, quantity + 1))}
               disabled={stock <= 0}
-              className="flex h-8 w-8 items-center justify-center text-sm"
               aria-label="Increase"
             >
               +
@@ -503,7 +539,7 @@ function ProductDetailView({ product, productId }) {
             type="button"
             onClick={handleAddToCart}
             disabled={stock <= 0}
-            className="lux-button shrink-0 px-3 py-2 text-xs"
+            className="product-detail__sticky-add"
           >
             {addedFeedback ? 'Added' : 'Add'}
           </button>
@@ -511,9 +547,9 @@ function ProductDetailView({ product, productId }) {
             type="button"
             onClick={handleBuyNow}
             disabled={stock <= 0}
-            className="shrink-0 rounded-full bg-ink px-3 py-2 font-playfair text-xs text-white disabled:opacity-50"
+            className="product-detail__sticky-buy"
           >
-            Buy now
+            Buy
           </button>
         </div>
       </div>
@@ -534,18 +570,18 @@ function ProductDetails() {
         <div className="section-container py-16">
           <div className="product-detail__grid">
             <div className="space-y-3">
-              <div className="aspect-square animate-pulse rounded-2xl bg-[#f0e6d6]" />
+              <div className="product-detail__skeleton-gallery" />
               <div className="flex gap-2">
                 {[0, 1, 2, 3].map((i) => (
-                  <div key={i} className="h-16 w-16 animate-pulse rounded-lg bg-[#f0e6d6] sm:h-20 sm:w-20" />
+                  <div key={i} className="product-detail__skeleton-thumb" />
                 ))}
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="h-8 w-3/4 animate-pulse rounded bg-[#f0e6d6]" />
-              <div className="h-10 w-1/3 animate-pulse rounded bg-[#f0e6d6]" />
-              <div className="h-32 animate-pulse rounded-xl bg-[#f0e6d6]" />
-              <div className="h-24 animate-pulse rounded bg-[#f0e6d6]" />
+            <div className="product-detail__skeleton-card">
+              <div className="product-detail__skeleton-line w-1/4" />
+              <div className="product-detail__skeleton-line w-3/4 h-6" />
+              <div className="product-detail__skeleton-line w-1/3 h-8" />
+              <div className="product-detail__skeleton-line w-full h-24" />
             </div>
           </div>
         </div>

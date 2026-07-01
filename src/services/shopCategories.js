@@ -27,6 +27,75 @@ export function imageForCategory(name) {
   return CATEGORY_IMAGES[key] || DEFAULT_CATEGORY_IMAGE
 }
 
+/** Homepage category image: admin override → curated map → API image. */
+export function resolveCategoryHomeImage(category, adminOverride = '') {
+  const override = String(adminOverride || '').trim()
+  if (override) return override
+
+  const name = String(category?.name || '').trim()
+  if (name && CATEGORY_IMAGES[name]) return CATEGORY_IMAGES[name]
+
+  const apiImage = String(category?.image || '').trim()
+  if (apiImage) return apiImage
+
+  return imageForCategory(name)
+}
+
+/** Keep only categories that have at least one catalog product. */
+export function filterCategoriesWithProducts(categories, products) {
+  if (!Array.isArray(categories) || categories.length === 0) return []
+  if (!Array.isArray(products) || products.length === 0) return categories
+
+  const active = new Set(
+    products
+      .map((p) => String(p?.category || '').trim())
+      .filter(Boolean)
+  )
+  if (active.size === 0) return categories
+
+  return categories.filter((c) => active.has(String(c?.name || '').trim()))
+}
+
+/**
+ * Curated category row for mobile/desktop home — avoids random product thumbnails.
+ * @param {number} [limit]
+ */
+export function buildHomeCategoryDisplayList(categories, products, homeCategoryImages, limit = 10) {
+  const overrides = Array.isArray(homeCategoryImages)
+    ? homeCategoryImages.filter((r) => String(r?.name || '').trim())
+    : []
+  const overrideByName = new Map(
+    overrides
+      .filter((r) => String(r?.image || '').trim())
+      .map((r) => [String(r.name).trim(), String(r.image).trim()])
+  )
+  const withProducts = filterCategoriesWithProducts(categories, products)
+  const productPool = withProducts.length > 0 ? withProducts : categories
+
+  if (overrides.length > 0) {
+    return overrides
+      .map((row) => {
+        const name = String(row.name).trim()
+        const catalogRow = productPool.find((c) => c.name === name)
+        if (withProducts.length > 0 && !catalogRow) return null
+        const image = resolveCategoryHomeImage(
+          catalogRow || { name },
+          overrideByName.get(name)
+        )
+        if (!image) return null
+        return { name, image, slug: catalogRow?.slug || '' }
+      })
+      .filter(Boolean)
+      .slice(0, limit)
+  }
+
+  return productPool.slice(0, limit).map((category) => ({
+    name: category.name,
+    image: resolveCategoryHomeImage(category, overrideByName.get(category.name)),
+    slug: category.slug || '',
+  }))
+}
+
 /**
  * @param {string[]} apiNames - legacy shop filter names from GET /api/categories
  * @param {{ name: string, image?: string, slug?: string }[]} [catalogCategories] - rich categories from GET /api/catalog/categories

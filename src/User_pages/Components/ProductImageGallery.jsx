@@ -134,7 +134,7 @@ export default function ProductImageGallery({ product, discountPct = 0, imageUrl
                         y: Math.max(0, Math.min(100, y)),
                       })
                     }}
-                    className={`aspect-[4/5] w-full object-contain p-4 sm:p-6 ${
+                    className={`product-gallery__img w-full ${
                       hasRealImages ? 'transition-transform duration-200' : ''
                     }`}
                     style={
@@ -212,12 +212,12 @@ export default function ProductImageGallery({ product, discountPct = 0, imageUrl
                 </SwiperSlide>
               ))}
             </Swiper>
-            <p className="mt-2 text-center font-playfair text-[11px] text-[#9a8578] sm:text-xs">
+            <p className="product-gallery__hint mt-2 text-center font-playfair text-[11px] text-[#9a8578] sm:text-xs">
               Select a thumbnail · Tap image to zoom
             </p>
           </>
         ) : (
-          <p className="mt-2 w-full text-center font-playfair text-[11px] text-muted sm:text-xs">
+          <p className="product-gallery__hint mt-2 w-full text-center font-playfair text-[11px] text-muted sm:text-xs">
             {hasRealImages ? 'Tap image to enlarge' : 'No image uploaded yet'}
           </p>
         )}

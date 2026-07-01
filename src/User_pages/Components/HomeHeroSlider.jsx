@@ -8,57 +8,105 @@ import { productImageUrl } from '../../utils/cloudinaryImage'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
+const HERO_TRUST = [
+  { icon: 'fa-solid fa-certificate', label: 'Certified quality' },
+  { icon: 'fa-solid fa-wallet', label: 'COD available' },
+  { icon: 'fa-solid fa-truck-fast', label: 'Fast delivery' },
+]
+
 function HomeHeroSlider() {
   const { slides } = useHomeHeroSlides()
 
   if (slides.length === 0) return null
 
   return (
-    <section className="jewelsium-hero relative overflow-hidden">
-      <Swiper
-        modules={[Autoplay, Pagination]}
-        slidesPerView={1}
-        loop={slides.length > 1}
-        speed={600}
-        autoplay={{ delay: 5500, disableOnInteraction: false, pauseOnMouseEnter: true }}
-        pagination={{ clickable: true }}
-        className="w-full"
-      >
-        {slides.map((slide, index) => (
-          <SwiperSlide key={`${slide.title}-${index}`}>
-            <div className="section-container grid min-h-[min(72vh,520px)] items-center gap-8 py-10 sm:min-h-[420px] sm:py-12 lg:grid-cols-2 lg:gap-12 lg:py-16">
-              <div className="order-2 text-center lg:order-1 lg:text-left">
-                {slide.tag ? <p className="text-overline">{slide.tag}</p> : null}
-                <h1
-                  className={`font-bodoni text-[clamp(1.75rem,4.5vw,3rem)] leading-tight text-ink ${slide.tag ? 'mt-3' : ''}`}
-                >
-                  {slide.title}
-                </h1>
-                {slide.subtitle ? (
-                  <p className="mt-3 text-helper sm:text-base">{slide.subtitle}</p>
-                ) : null}
-                <Link to={slide.link} className="lux-button mt-7 min-h-[44px]">
-                  Shop now
-                </Link>
-              </div>
-              <div className="order-1 lg:order-2">
+    <section className="jewelsium-hero jewelsium-hero--premium" aria-label="Featured collections">
+      <div className="jewelsium-hero__backdrop" aria-hidden>
+        <div className="jewelsium-hero__mesh jewelsium-hero__mesh--gold" />
+        <div className="jewelsium-hero__mesh jewelsium-hero__mesh--rose" />
+        <div className="jewelsium-hero__grain" />
+      </div>
+
+      <div className="section-container jewelsium-hero__shell">
+        <Swiper
+          modules={[Autoplay, Pagination]}
+          slidesPerView={1}
+          loop={slides.length > 1}
+          speed={720}
+          autoplay={{ delay: 6000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+          pagination={
+            slides.length > 1 ? { clickable: true, el: '.jewelsium-hero__dots' } : false
+          }
+          className="jewelsium-hero__swiper"
+        >
+          {slides.map((slide, index) => (
+            <SwiperSlide key={`${slide.title}-${index}`}>
+              <div className="jewelsium-hero__slide">
+                <div className="jewelsium-hero__copy">
+                  {slide.tag ? (
+                    <div className="jewelsium-hero__eyebrow">
+                      <span className="jewelsium-hero__eyebrow-dot" aria-hidden />
+                      {slide.tag}
+                    </div>
+                  ) : null}
+
+                  <h1 className="jewelsium-hero__title">{slide.title}</h1>
+
+                  {slide.subtitle ? (
+                    <p className="jewelsium-hero__subtitle">{slide.subtitle}</p>
+                  ) : null}
+
+                  <div className="jewelsium-hero__actions">
+                    <Link to={slide.link} className="lux-button jewelsium-hero__btn-primary">
+                      Shop now
+                    </Link>
+                    <Link to="/collections" className="jewelsium-hero__btn-outline">
+                      Browse collections
+                    </Link>
+                  </div>
+
+                  <ul className="jewelsium-hero__trust" aria-label="Store highlights">
+                    {HERO_TRUST.map((item) => (
+                      <li key={item.label} className="jewelsium-hero__trust-item">
+                        <i className={item.icon} aria-hidden />
+                        {item.label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
                 {slide.image ? (
-                  <div className="relative mx-auto aspect-[4/5] max-h-[380px] w-full max-w-md overflow-hidden rounded-2xl border border-[#eadfc9] bg-[var(--color-surface-warm)] sm:max-h-[420px] lg:ml-auto lg:max-w-lg">
-                    <img
-                      src={productImageUrl(slide.image, 'hero')}
-                      alt={slide.title || 'Featured jewellery'}
-                      className="h-full w-full object-cover object-center"
-                      fetchPriority={index === 0 ? 'high' : undefined}
-                      loading={index === 0 ? undefined : 'lazy'}
-                      decoding="async"
-                    />
+                  <div className="jewelsium-hero__visual">
+                    <div className="jewelsium-hero__frame-shadow" aria-hidden />
+                    <div className="jewelsium-hero__frame">
+                      <img
+                        src={productImageUrl(slide.image, 'hero')}
+                        alt={slide.title || 'Featured jewellery'}
+                        className="jewelsium-hero__img"
+                        fetchPriority={index === 0 ? 'high' : undefined}
+                        loading={index === 0 ? undefined : 'lazy'}
+                        decoding="async"
+                      />
+                      <div className="jewelsium-hero__frame-shine" aria-hidden />
+                    </div>
+                    <div className="jewelsium-hero__float-card" aria-hidden>
+                      <i className="fa-solid fa-gem" />
+                      <span>Handcrafted</span>
+                    </div>
+                    <div className="jewelsium-hero__ring" aria-hidden />
                   </div>
                 ) : null}
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        {slides.length > 1 ? (
+          <div className="jewelsium-hero__footer">
+            <div className="jewelsium-hero__dots" />
+          </div>
+        ) : null}
+      </div>
     </section>
   )
 }

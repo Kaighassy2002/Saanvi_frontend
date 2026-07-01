@@ -6,7 +6,6 @@ import CollectionProductCard from '../Components/CollectionProductCard'
 import CollectionFilters from '../Components/CollectionFilters'
 import CollectionSortFilterBar from '../Components/CollectionSortFilterBar'
 import CollectionCategoryChips from '../Components/CollectionCategoryChips'
-import CollectionPageHeader from '../Components/CollectionPageHeader'
 import {
   buildListingSearchParams,
   listingParamsToHref,
@@ -35,15 +34,14 @@ const SORT_OPTIONS = [
   { value: 'name', label: 'Name A–Z' },
 ]
 
-function ProductSkeleton({ compact = false }) {
+function ProductSkeleton() {
   return (
-    <div
-      className={`overflow-hidden bg-white ${compact ? 'rounded-xl border border-[#ebe3d6]' : 'rounded-2xl border border-[#e8dcc8]'}`}
-    >
-      <div className="collection-skeleton aspect-[4/5] w-full" />
-      <div className={`space-y-2 ${compact ? 'p-2' : 'p-3 sm:p-4'}`}>
-        <div className="collection-skeleton h-4 w-full rounded" />
-        <div className="collection-skeleton h-5 w-2/3 rounded" />
+    <div className="home-mobile-feed-card">
+      <div className="collection-skeleton home-mobile-feed-card__media" />
+      <div className="home-mobile-feed-card__body space-y-2">
+        <div className="collection-skeleton h-3 w-2/3 rounded" />
+        <div className="collection-skeleton h-3 w-full rounded" />
+        <div className="collection-skeleton h-4 w-1/2 rounded" />
       </div>
     </div>
   )
@@ -76,9 +74,6 @@ function ProductListing() {
   const [sortBy, setSortBy] = useState('featured')
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [sortOpen, setSortOpen] = useState(false)
-  const [compactCards, setCompactCards] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches
-  )
   const searchBlockRef = useRef(null)
   const compactBarRef = useRef(null)
   const [searchPastY, setSearchPastY] = useState(96)
@@ -151,14 +146,6 @@ function ProductListing() {
   useEffect(() => {
     setLocalSearch(searchParams.get('search') || '')
   }, [searchParams])
-
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 1023px)')
-    const onChange = () => setCompactCards(mq.matches)
-    onChange()
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
 
   useEffect(() => {
     const measureSearchPast = () => {
@@ -357,11 +344,11 @@ function ProductListing() {
     </>
   )
 
-  const renderProductGrid = (compactCards) =>
+  const renderProductGrid = () =>
     loading ? (
     <div className="collection-products-grid">
       {Array.from({ length: SKELETON_COUNT }, (_, i) => (
-        <ProductSkeleton key={i} compact={compactCards} />
+        <ProductSkeleton key={i} />
       ))}
     </div>
   ) : filteredCount === 0 ? (
@@ -386,7 +373,6 @@ function ProductListing() {
             productHref={entry.href}
             reviewSummary={reviewSummaries[String(entry.productId)]}
             saved={isInWishlist(entry.productId)}
-            compact={compactCards}
             onToggleWishlist={() =>
               toggle({
                 productId: entry.productId,
@@ -404,7 +390,7 @@ function ProductListing() {
       {(hasMore || loadingMore) && (
         <div className="collection-products-grid collection-products-grid--load-more mt-2 lg:mt-3">
           {Array.from({ length: 4 }, (_, i) => (
-            <ProductSkeleton key={`more-${i}`} compact={compactCards} />
+            <ProductSkeleton key={`more-${i}`} />
           ))}
         </div>
       )}
@@ -417,10 +403,10 @@ function ProductListing() {
     </>
   )
 
-  const productGrid = renderProductGrid(compactCards)
+  const productGrid = renderProductGrid()
 
   return (
-    <div id="main-content" className="page-shell collection-page" tabIndex={-1}>
+    <div id="main-content" className="page-shell collection-page storefront-feed--compact" tabIndex={-1}>
       <SiteHeader staticOnMobile />
 
       {/* Fixed Sort/Filter — overlays products; no layout spacer */}
@@ -596,12 +582,6 @@ function ProductListing() {
               <div className="collection-myntra__active-filters hidden lg:flex">{activeFilterPills}</div>
             ) : null}
 
-            <CollectionPageHeader
-              title={pageTitle}
-              productCount={listingTotal}
-              loading={loading}
-              selectedCategory={selectedCategory}
-            />
             {productGrid}
           </div>
         </div>

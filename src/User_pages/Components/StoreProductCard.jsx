@@ -83,10 +83,10 @@ function StoreProductCard({
             e.preventDefault()
             onToggleWishlist()
           }}
-          className={`store-product-card__wishlist ${isCompact ? 'store-product-card__wishlist--sm' : ''}`}
+          className={`store-product-card__wishlist${saved ? ' is-active' : ''} ${isCompact ? 'store-product-card__wishlist--sm' : ''}`}
           aria-label={saved ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-          <i className={`fa-heart text-sm ${saved ? 'fa-solid text-gold' : 'fa-regular'}`} aria-hidden />
+          <i className={`fa-heart text-sm ${saved ? 'fa-solid' : 'fa-regular'}`} aria-hidden />
         </button>
 
         <Link to={productHref} className="store-product-card__media-link">

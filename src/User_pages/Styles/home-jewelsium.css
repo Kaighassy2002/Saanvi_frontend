@@ -42,7 +42,7 @@
 .jewelsium-services {
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
-  background: linear-gradient(180deg, #fffdf9 0%, #fbf5ea 100%);
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-beige) 100%);
 }
 
 .jewelsium-services__strip {
@@ -80,12 +80,12 @@
   font-weight: 500;
   line-height: 1.55;
   letter-spacing: 0.03em;
-  color: #f5ead7;
+  color: var(--color-highlight);
   text-transform: none;
 }
 
 .jewelsium-services__strip-lead {
-  color: #faf4ea;
+  color: var(--color-cream);
   font-weight: 500;
 }
 

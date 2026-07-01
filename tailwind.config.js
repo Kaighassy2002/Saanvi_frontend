@@ -18,6 +18,28 @@ export default {
         },
         ink: '#1f1514',
         muted: '#6f5d5b',
+        subtle: '#8a7573',
+        border: {
+          DEFAULT: '#eadfc9',
+          light: '#f0e6d4',
+        },
+        surface: {
+          DEFAULT: '#fffdf9',
+          elevated: '#ffffff',
+          warm: '#f8f2e7',
+        },
+        cream: '#fff8ee',
+        parchment: '#faf6ef',
+        highlight: '#f5ead7',
+        success: '#5a6b52',
+        accent: '#7a2c3a',
+        royal: {
+          950: '#2a1116',
+          900: '#3a151d',
+          800: '#5a1f2b',
+          700: '#7a2c3a',
+          100: '#f7ecee',
+        },
       },
       fontFamily: {
         'bodoni': ['Bodoni Moda', 'serif'],
@@ -28,5 +50,3 @@ export default {
   },
   plugins: [],
 }
-
-

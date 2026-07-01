@@ -19,12 +19,6 @@ function HomeMobileQuickShop() {
 
   return (
     <section className="home-mobile-quick" aria-label="Quick shop">
-      {quickShop.searchPlaceholder ? (
-        <Link to="/collections" className="home-mobile-quick__search-hint">
-          <i className="fa-solid fa-magnifying-glass text-[#9a8578]" aria-hidden />
-          {quickShop.searchPlaceholder}
-        </Link>
-      ) : null}
       <div className="home-mobile-scroll">
         {chips.map((chip, index) => (
           <Link

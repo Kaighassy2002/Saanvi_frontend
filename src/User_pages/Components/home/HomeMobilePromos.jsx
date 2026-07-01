@@ -2,34 +2,46 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useHomeContent } from '../../../hooks/useHomeContent'
 import { productImageUrl } from '../../../utils/cloudinaryImage'
+import MobileSectionHeader from './MobileSectionHeader'
 
 function HomeMobilePromos() {
   const { promoBanners, homeSections } = useHomeContent()
   const copy = homeSections.mobilePromos || {}
 
+  if (!promoBanners.length) return null
+
   return (
     <section className="home-mobile-section home-mobile-section--offers" aria-label="Offers">
-      <div className="home-mobile-section__head">
-        {copy.title ? <h2 className="home-mobile-section__title">{copy.title}</h2> : null}
-        {copy.linkLabel ? (
-          <Link to={copy.linkUrl || '/collections'} className="home-mobile-section__link">
-            {copy.linkLabel}
-          </Link>
-        ) : null}
-      </div>
-      <div className="home-mobile-scroll" style={{ paddingLeft: '1rem', paddingRight: '1rem' }}>
+      <MobileSectionHeader
+        overline="Limited time"
+        title={copy.title || 'Offers for you'}
+        linkLabel={copy.linkLabel || 'See all'}
+        linkHref={copy.linkUrl || '/collections'}
+      />
+      <div className="home-mobile-promo-list">
         {promoBanners.map((banner, index) => (
-          <Link key={`${banner.title}-${index}`} to={banner.link} className="home-mobile-promo-card">
-            <img
-              src={productImageUrl(banner.image, 'promo')}
-              alt={banner.title || 'Promotional offer'}
-              className="home-mobile-promo-card__img"
-              loading="lazy"
-            />
-            <div className="home-mobile-promo-card__shade" aria-hidden />
-            <div className="home-mobile-promo-card__body">
-              {banner.label ? <p className="home-mobile-promo-card__label">{banner.label}</p> : null}
+          <Link
+            key={`${banner.title}-${index}`}
+            to={banner.link}
+            className="home-mobile-promo-card"
+          >
+            <div className="home-mobile-promo-card__copy">
+              {banner.label ? (
+                <span className="home-mobile-promo-card__badge">{banner.label}</span>
+              ) : null}
               <p className="home-mobile-promo-card__title">{banner.title}</p>
+              <span className="home-mobile-promo-card__cta">
+                {banner.buttonText || 'Shop now'}
+                <i className="fa-solid fa-arrow-right" aria-hidden />
+              </span>
+            </div>
+            <div className="home-mobile-promo-card__media">
+              <img
+                src={productImageUrl(banner.image, 'promo')}
+                alt=""
+                className="home-mobile-promo-card__img"
+                loading="lazy"
+              />
             </div>
           </Link>
         ))}

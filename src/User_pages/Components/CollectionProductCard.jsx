@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
-import StoreProductCard from './StoreProductCard'
+import HomeMobileFeedProductCard from './home/HomeMobileFeedProductCard'
 
-function CollectionProductCard({ compact = false, ...props }) {
-  return <StoreProductCard {...props} variant={compact ? 'compact' : 'grid'} />
+function CollectionProductCard(props) {
+  return <HomeMobileFeedProductCard {...props} />
 }
 
 export default memo(CollectionProductCard)

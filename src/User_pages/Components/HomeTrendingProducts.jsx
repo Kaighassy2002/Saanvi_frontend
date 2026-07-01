@@ -15,10 +15,13 @@ const GRID_SIZE = 10
 
 function ProductSkeleton() {
   return (
-    <div>
-      <div className="jewelsium-skeleton aspect-square w-full" />
-      <div className="jewelsium-skeleton mx-auto mt-3 h-3 w-2/3" />
-      <div className="jewelsium-skeleton mx-auto mt-2 h-3 w-1/2" />
+    <div className="home-mobile-feed-card">
+      <div className="jewelsium-skeleton home-mobile-feed-card__media" />
+      <div className="home-mobile-feed-card__body space-y-2">
+        <div className="jewelsium-skeleton h-3 w-2/3 rounded" />
+        <div className="jewelsium-skeleton h-3 w-full rounded" />
+        <div className="jewelsium-skeleton h-4 w-1/2 rounded" />
+      </div>
     </div>
   )
 }
@@ -85,24 +88,24 @@ function HomeTrendingProducts() {
       </div>
 
       {loading ? (
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
           {Array.from({ length: 10 }, (_, i) => (
             <ProductSkeleton key={i} />
           ))}
         </div>
       ) : displayProducts.length === 0 ? (
-        <div className="mt-10 border border-[#ebebeb] bg-[#fafafa] p-10 text-center">
+        <div className="mt-10 border border-border bg-surface-warm p-10 text-center">
           <p className="text-helper text-center">No products to show yet.</p>
           <Link
             to="/collections"
-            className="mt-4 inline-flex min-h-[44px] items-center bg-[#1f1514] px-8 py-2.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-white"
+            className="mt-4 inline-flex min-h-[44px] items-center bg-ink px-8 py-2.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-white transition hover:bg-royal-950"
           >
             Browse shop
           </Link>
         </div>
       ) : (
         <div
-          className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-4 xl:grid-cols-5"
+          className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5"
           role="tabpanel"
         >
           {displayProducts.map((product) => (
@@ -128,7 +131,7 @@ function HomeTrendingProducts() {
         <div className="mt-12 text-center">
           <Link
             to={trendingViewAllHref(activeTab)}
-            className="inline-flex border-b border-[#1f1514] pb-1 font-sans text-sm font-medium uppercase tracking-[0.12em] text-[#1f1514] transition hover:border-[#7a2c3a] hover:text-[#7a2c3a]"
+            className="inline-flex border-b border-ink pb-1 font-sans text-sm font-medium uppercase tracking-[0.12em] text-ink transition hover:border-royal-700 hover:text-royal-700"
           >
             {trending.viewAllLabel}
           </Link>

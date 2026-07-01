@@ -69,6 +69,15 @@ export function getProductAvailableStock(product) {
   return availableUnits(product?.stock, product?.reservedStock)
 }
 
+export function productStockIsKnown(product) {
+  if (productHasVariants(product)) {
+    const variants = getProductVariants(product)
+    if (variants.length === 0) return false
+    return variants.some((v) => v?.stock !== undefined && v?.stock !== null)
+  }
+  return product?.stock !== undefined && product?.stock !== null
+}
+
 export function productIsInStock(product) {
   return getProductAvailableStock(product) > 0
 }

@@ -11,14 +11,16 @@ function HomeServiceBar() {
   return (
     <section ref={ref} className="jewelsium-services section-reveal" aria-label="Store benefits">
       <ServiceBarStrip text={serviceBarStrip} />
-      <div className="section-container grid grid-cols-2 gap-4 py-6 sm:grid-cols-4 sm:gap-5 sm:py-8">
+      <div className="jewelsium-services__cards section-container grid grid-cols-2 gap-4 py-6 sm:grid-cols-4 sm:gap-5 sm:py-8">
         {homeServices.map((item, index) => (
           <div key={`${item.title}-${index}`} className="jewelsium-service-card">
             <span className="jewelsium-service-card__icon">
               <i className={formatFontAwesomeIcon(item.icon)} aria-hidden />
             </span>
-            <h2 className="jewelsium-service-card__title">{item.title}</h2>
-            <p className="jewelsium-service-card__text">{item.text}</p>
+            <div className="jewelsium-service-card__copy">
+              <h2 className="jewelsium-service-card__title">{item.title}</h2>
+              <p className="jewelsium-service-card__text">{item.text}</p>
+            </div>
           </div>
         ))}
       </div>

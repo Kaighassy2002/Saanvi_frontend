@@ -1,15 +1,11 @@
-import React, { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useMemo } from 'react'
 import { useNewArrivals } from '../../../hooks/useNewArrivals'
 import { useWishlist } from '../../../hooks/useWishlist'
 import { useFeaturedProducts } from '../../../hooks/useFeaturedProducts'
 import { useReviewSummaries } from '../../../hooks/useReviewSummaries'
 import { useHomeContent } from '../../../hooks/useHomeContent'
 import { mobileTrendingViewAllHref } from '../../../services/homeMerchandising'
-import { getProductPrimaryImage } from '../../utils/productImages'
-import HomeProductCard from '../HomeProductCard'
-
-const GRID_SIZE = 8
+import MobileProductRail, { MOBILE_RAIL_LIMIT } from './MobileProductRail'
 
 function HomeMobileTrending() {
   const { homeSections } = useHomeContent()
@@ -21,97 +17,57 @@ function HomeMobileTrending() {
         ? trending.tabs
         : [
             { id: 'featured', label: 'Featured' },
-            { id: 'new', label: 'New' },
+            { id: 'new', label: 'New Arrivals' },
             { id: 'bestseller', label: 'Best deals' },
           ]
     return raw.filter((t) => t.id !== 'bestseller')
   }, [trending.tabs])
-  const [activeTab, setActiveTab] = useState(tabs[0]?.id || 'featured')
+
+  const featuredTab = tabs.find((t) => t.id === 'featured') || { id: 'featured', label: 'Featured' }
+  const newTab = tabs.find((t) => t.id === 'new') || { id: 'new', label: 'New Arrivals' }
+
   const { products: newArrivals, loading: newLoading } = useNewArrivals()
-  const { products: featured, loading: featuredLoading } = useFeaturedProducts(GRID_SIZE)
+  const { products: featured, loading: featuredLoading } = useFeaturedProducts(MOBILE_RAIL_LIMIT)
   const { toggle, isInWishlist } = useWishlist()
 
-  const newProducts = useMemo(() => newArrivals.slice(0, GRID_SIZE), [newArrivals])
-  const displayProducts = activeTab === 'new' ? newProducts : featured
+  const newProducts = useMemo(() => newArrivals.slice(0, MOBILE_RAIL_LIMIT), [newArrivals])
 
-  const loading =
-    (activeTab === 'new' ? newLoading : featuredLoading) && displayProducts.length === 0
+  const newReviewSummaries = useReviewSummaries(newProducts.map((p) => p.id))
+  const featuredReviewSummaries = useReviewSummaries(featured.map((p) => p.id))
 
-  const viewAllHref = mobileTrendingViewAllHref(activeTab)
-  const reviewSummaries = useReviewSummaries(displayProducts.map((p) => p.id))
+  const linkLabel = mobileCopy.linkLabel || 'View all'
 
   return (
-    <section className="home-mobile-section home-mobile-section--trending" aria-label="Trending products">
-      <div className="home-mobile-section__head">
-        <div>
-          {trending.overline ? (
-            <p className="home-mobile-section__overline">{trending.overline}</p>
-          ) : null}
-          {mobileCopy.title || trending.title ? (
-            <h2 className="home-mobile-section__title">
-              {mobileCopy.title || trending.title}
-            </h2>
-          ) : null}
-        </div>
-        {mobileCopy.linkLabel ? (
-          <Link to={viewAllHref} className="home-mobile-section__link">
-            {mobileCopy.linkLabel}
-          </Link>
-        ) : null}
-      </div>
-
-      <div className="home-mobile-tabs" role="tablist">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            className={`home-mobile-tab${activeTab === tab.id ? ' home-mobile-tab--active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {loading ? (
-        <div className="home-mobile-products">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i}>
-              <div className="jewelsium-skeleton aspect-square w-full rounded-md" />
-              <div className="jewelsium-skeleton mt-2 h-3 w-3/4" />
-            </div>
-          ))}
-        </div>
-      ) : displayProducts.length === 0 ? (
-        <div className="home-mobile-empty">
-          <p className="home-mobile-empty__text">No products to show yet.</p>
-          <Link to="/collections" className="home-mobile-empty__btn">
-            Browse shop
-          </Link>
-        </div>
-      ) : (
-        <div className="home-mobile-products" role="tabpanel">
-          {displayProducts.map((product) => (
-            <HomeProductCard
-              key={product.id}
-              product={product}
-              reviewSummary={reviewSummaries[String(product.id)]}
-              saved={isInWishlist(product.id)}
-              onToggleWishlist={() =>
-                toggle({
-                  productId: product.id,
-                  name: product.name,
-                  image: getProductPrimaryImage(product),
-                  price: product.price,
-                })
-              }
-            />
-          ))}
-        </div>
-      )}
-    </section>
+    <>
+      <MobileProductRail
+        sectionClass="home-mobile-section--new-arrivals"
+        ariaLabel="New arrivals"
+        overline="Just dropped"
+        title={newTab.label}
+        linkLabel={linkLabel}
+        viewAllHref={mobileTrendingViewAllHref('new')}
+        ctaLabel="Shop new arrivals"
+        products={newProducts}
+        loading={newLoading && newProducts.length === 0}
+        reviewSummaries={newReviewSummaries}
+        isInWishlist={isInWishlist}
+        onToggleWishlist={toggle}
+      />
+      <MobileProductRail
+        sectionClass="home-mobile-section--featured"
+        ariaLabel="Featured products"
+        overline={trending.overline || 'Most loved picks'}
+        title={featuredTab.label}
+        linkLabel={linkLabel}
+        viewAllHref={mobileTrendingViewAllHref('featured')}
+        ctaLabel="Shop featured"
+        products={featured}
+        loading={featuredLoading && featured.length === 0}
+        reviewSummaries={featuredReviewSummaries}
+        isInWishlist={isInWishlist}
+        onToggleWishlist={toggle}
+      />
+    </>
   )
 }
 

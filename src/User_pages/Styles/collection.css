@@ -1,3 +1,5 @@
+@import './product-feed-card.css';
+
 .collection-range {
 
   accent-color: var(--color-gold);
@@ -284,7 +286,7 @@
 
   font-weight: 600;
 
-  color: #1f1514;
+  color: var(--color-ink);
 
   transition: background 0.15s ease;
 
@@ -340,43 +342,14 @@
   }
 }
 
-.collection-products-grid {
-
-  display: grid;
-
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 0.375rem;
-
-}
-
-.collection-products-grid > * {
-  min-width: 0;
-  max-width: 100%;
-}
-
-
-
-@media (min-width: 640px) {
-
-  .collection-products-grid {
-
-    gap: 1rem;
-
-  }
-
-}
-
-
-
 /* Active filter pills — mobile (warm) */
 .collection-active-pill {
-  background: #f5ead7;
-  color: #7a2c3a;
+  background: var(--color-highlight);
+  color: var(--color-royal-700);
 }
 
 .collection-active-pill-clear {
-  color: #7a2c3a;
+  color: var(--color-royal-700);
   text-decoration: underline;
 }
 
@@ -406,8 +379,6 @@
   }
 
   .collection-products-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.25rem 0.75rem;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -449,7 +420,7 @@
   }
 
   .collection-myntra__breadcrumb a:hover {
-    color: #7a2c3a;
+    color: var(--color-royal-700);
   }
 
   .collection-myntra__title {
@@ -540,7 +511,7 @@
   }
 
   .collection-myntra__filter-option:hover {
-    color: #7a2c3a;
+    color: var(--color-royal-700);
   }
 
   .collection-myntra__filter-option.is-selected .collection-myntra__filter-option-label {
@@ -562,8 +533,8 @@
   }
 
   .collection-myntra__filter-option.is-selected .collection-myntra__checkbox {
-    border-color: #7a2c3a;
-    background: #7a2c3a;
+    border-color: var(--color-royal-700);
+    background: var(--color-royal-700);
   }
 
   .collection-myntra__filter-option-label {
@@ -710,7 +681,7 @@
   }
 
   .collection-card--myntra:hover .collection-card__title {
-    color: #7a2c3a;
+    color: var(--color-royal-700);
   }
 
   .collection-card--myntra .collection-card__title {
