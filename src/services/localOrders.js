@@ -189,6 +189,68 @@ export function requestLocalOrderReturn(orderId, note = 'Customer requested retu
   })
 }
 
+function patchOrderItems(orderId, lineId, patch) {
+  const order = getLocalOrderById(orderId)
+  if (!order) throw new Error('Order not found')
+  const items = (order.items || []).map((item, index) => {
+    const id =
+      String(item.lineId || '').trim() ||
+      `line_legacy_${index}_${String(item.productId || 'item').slice(-6)}`
+    if (id !== lineId) return { ...item, lineId: id, status: item.status || 'active' }
+    return { ...item, lineId: id, status: item.status || 'active', ...patch }
+  })
+  return patchScopedOrder(orderId, { items })
+}
+
+export function requestLocalOrderLineCancel(orderId, lineId, note = 'Customer cancelled item') {
+  const order = getLocalOrderById(orderId)
+  if (!order) throw new Error('Order not found')
+  if (!['Placed', 'Confirmed', 'Packed'].includes(order.status)) {
+    throw new Error('Cancellation is only available before your order is shipped')
+  }
+  const at = new Date().toISOString()
+  const history = [...(order.statusHistory || []), {
+    status: order.status,
+    paymentStatus: order.paymentStatus || 'pending',
+    note: `Item cancelled: ${note}`,
+    at,
+    by: order.customerEmail || 'customer',
+  }]
+  const updated = patchOrderItems(orderId, lineId, {
+    status: 'cancelled',
+    cancelledAt: at,
+    cancelReason: note,
+  })
+  if (!updated) throw new Error('Line item not found')
+  const active = (updated.items || []).filter((i) => (i.status || 'active') === 'active')
+  if (active.length === 0) {
+    return patchScopedOrder(orderId, { status: 'Cancelled', statusHistory: history })
+  }
+  return patchScopedOrder(orderId, { statusHistory: history })
+}
+
+export function requestLocalOrderLineReturn(orderId, lineId, note = 'Customer requested return') {
+  const order = getLocalOrderById(orderId)
+  if (!order) throw new Error('Order not found')
+  if (order.status !== 'Delivered') throw new Error('Returns are only available for delivered orders')
+  const at = new Date().toISOString()
+  const history = [...(order.statusHistory || []), {
+    status: order.status,
+    paymentStatus: order.paymentStatus || 'pending',
+    note: `Return requested: ${note}`,
+    at,
+    by: order.customerEmail || 'customer',
+  }]
+  const updated = patchOrderItems(orderId, lineId, {
+    status: 'return_requested',
+    returnRequestedAt: at,
+    returnReason: note,
+    rmaId: `RMA-${String(orderId).replace('ORD-', '')}-${String(lineId).slice(-8)}`,
+  })
+  if (!updated) throw new Error('Line item not found')
+  return patchScopedOrder(orderId, { statusHistory: history })
+}
+
 /**
  * Create order from storefront checkout (prepended so newest first; admin sees it too).
  */

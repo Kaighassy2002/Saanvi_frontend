@@ -4,6 +4,7 @@ import Footer from '../Components/Footer'
 import SiteHeader from '../Components/SiteHeader'
 import AccountSidebar from '../Components/AccountSidebar'
 import OrderInvoicePrint from '../Components/OrderInvoicePrint'
+import OrderCard from '../Components/OrderCard'
 import OrderDetailPanel from '../Components/OrderDetailPanel'
 import {
   CUSTOMER_SESSION_CHANGED_EVENT,
@@ -12,37 +13,19 @@ import {
   USE_LOCAL_API,
 } from '../../services/config'
 import { whatsappUrl, STORE_NAME } from '../../services/storefrontConstants'
-import { productImageUrl } from '../../utils/cloudinaryImage'
 import { printOrderInvoice } from '../../utils/printOrderInvoice'
 import { fetchMyOrders, fetchMyOrderById } from '../../services/storefrontOrderService'
 import { isCustomerLoggedIn } from '../../services/customerStorageScope'
-import {
-  formatOrderDateTime,
-  formatPaymentMethodLabel,
-  formatPaymentStatusLabel,
-  getOrderPublicId,
-  orderStatusIcon,
-  orderStatusNote,
-  orderStatusTone,
-} from '../../services/orderWorkflow'
+import { getOrderPublicId } from '../../services/orderWorkflow'
 import '../Styles/user-profile.css'
 import '../Styles/orders-list.css'
 
-function formatStatusWhen(order) {
-  return formatOrderDateTime(order.placedAt || order.date)
-}
-
-/** Short id for narrow screens; full id available via title attribute. */
-function formatOrderId(id) {
-  const s = String(id || '').trim()
-  if (!s) return '—'
-  if (s.length <= 18) return s
-  const parts = s.split('-').filter(Boolean)
-  if (parts.length >= 2) {
-    return `${parts[0]}-…-${parts[parts.length - 1]}`
-  }
-  return `${s.slice(0, 10)}…${s.slice(-6)}`
-}
+const ORDER_FILTERS = [
+  { id: 'all', label: 'All orders' },
+  { id: 'active', label: 'In progress' },
+  { id: 'delivered', label: 'Delivered' },
+  { id: 'cancelled', label: 'Cancelled' },
+]
 
 function orderIdsMatch(a, b) {
   const left = String(a || '').trim()
@@ -50,6 +33,18 @@ function orderIdsMatch(a, b) {
   return left.length > 0 && left === right
 }
 
+function matchesFilter(order, filterId) {
+  const status = String(order.status || '').toLowerCase()
+  if (filterId === 'all') return true
+  if (filterId === 'active') {
+    return ['placed', 'confirmed', 'packed', 'shipped', 'out for delivery'].includes(status)
+  }
+  if (filterId === 'delivered') return status === 'delivered'
+  if (filterId === 'cancelled') {
+    return status === 'cancelled' || status === 'returned' || status === 'return requested'
+  }
+  return true
+}
 
 function Order() {
   const navigate = useNavigate()
@@ -59,6 +54,7 @@ function Order() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [filter, setFilter] = useState('all')
   const [expandedId, setExpandedId] = useState(() => {
     const seed = placedId || orderFromQuery
     return seed ? String(seed).trim() : null
@@ -126,6 +122,21 @@ function Order() {
     [orders],
   )
 
+  const filtered = useMemo(
+    () => sorted.filter((o) => matchesFilter(o, filter)),
+    [sorted, filter],
+  )
+
+  const filterCounts = useMemo(() => {
+    const counts = { all: sorted.length }
+    ORDER_FILTERS.forEach((f) => {
+      if (f.id !== 'all') {
+        counts[f.id] = sorted.filter((o) => matchesFilter(o, f.id)).length
+      }
+    })
+    return counts
+  }, [sorted])
+
   const placedOrder = placedId
     ? sorted.find((o) => orderIdsMatch(getOrderPublicId(o), placedId))
     : null
@@ -139,7 +150,6 @@ function Order() {
       : null) ||
     (expandedId && placedOrder && orderIdsMatch(getOrderPublicId(placedOrder), expandedId) ? placedOrder : null)
   const invoiceOrder = expandedOrder || placedOrder
-  const expandedOrderId = expandedOrder ? getOrderPublicId(expandedOrder) : ''
 
   useEffect(() => {
     if (!expandedId) {
@@ -172,7 +182,7 @@ function Order() {
     if (!expandedId) return
     const el = document.getElementById(`order-expand-${expandedId}`)
     el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-  }, [expandedId, expandedOrderId])
+  }, [expandedId])
 
   const handleOrderUpdated = (updated) => {
     const id = getOrderPublicId(updated)
@@ -204,248 +214,132 @@ function Order() {
       {loadError ? (
         <p className="orders-alert orders-alert--error" role="alert">
           {loadError}{' '}
-          <button type="button" className="underline" onClick={() => load()}>
+          <button type="button" onClick={() => load()}>
             Retry
           </button>
         </p>
       ) : null}
 
       {placedId ? (
-        <div className="orders-banner orders-banner--success" role="status">
-          <h2 className="orders-banner__title">Order placed successfully</h2>
-          <p className="orders-banner__text">
-            Order <span className="orders-banner__id">{placedId}</span> was placed successfully
-            {placedOrder ? (
-              <>
-                {' '}
-                with status <strong>{placedOrder.status}</strong>
-              </>
-            ) : (
-              '.'
-            )}
-            {!USE_LOCAL_API && !hasToken ? ' Sign in with the same account to track it.' : null}
-          </p>
-          <p className="orders-banner__text">
-            {placedOrder ? (
-              <>
-                <button
-                  type="button"
-                  className="font-semibold underline text-royal-700"
-                  onClick={() => setExpandedId(placedId)}
-                >
-                  View details
-                </button>
-                {' · '}
-                <button
-                  type="button"
-                  className="font-semibold underline text-royal-700"
-                  onClick={() => printOrderInvoice(placedId)}
-                >
-                  Download invoice
-                </button>
-              </>
-            ) : (
-              'Your order will appear in the list below shortly.'
-            )}
-          </p>
-          <a
-            href={whatsappUrl(`Hi, I placed order ${placedId} on ${STORE_NAME}.`)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="orders-banner__whatsapp"
-          >
-            <i className="fab fa-whatsapp" aria-hidden />
-            Chat on WhatsApp
-          </a>
+        <div className="orders-success" role="status">
+          <div className="orders-success__icon" aria-hidden>
+            <i className="fa-solid fa-circle-check" />
+          </div>
+          <div className="orders-success__body">
+            <h2 className="orders-success__title">Thank you — order placed</h2>
+            <p className="orders-success__text">
+              <span className="orders-success__id">{placedId}</span>
+              {placedOrder ? (
+                <>
+                  {' '}
+                  is <strong>{placedOrder.status}</strong>.
+                </>
+              ) : (
+                ' will appear in your list shortly.'
+              )}
+            </p>
+            <div className="orders-success__actions">
+              {placedOrder ? (
+                <>
+                  <button type="button" onClick={() => setExpandedId(placedId)}>
+                    View order
+                  </button>
+                  <button type="button" onClick={() => printOrderInvoice(placedId)}>
+                    Invoice
+                  </button>
+                </>
+              ) : null}
+              <a
+                href={whatsappUrl(`Hi, I placed order ${placedId} on ${STORE_NAME}.`)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="fab fa-whatsapp" aria-hidden />
+                WhatsApp
+              </a>
+            </div>
+          </div>
         </div>
       ) : null}
 
       {showSignInHint ? (
         <p className="orders-alert orders-alert--info">
           Sign in to see orders linked to your account.{' '}
-          <Link to="/auth" className="font-semibold text-royal-700 underline">
-            Sign in
-          </Link>
+          <Link to="/auth">Sign in</Link>
         </p>
+      ) : null}
+
+      {sorted.length > 0 ? (
+        <div className="orders-filters" role="tablist" aria-label="Filter orders">
+          {ORDER_FILTERS.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              role="tab"
+              aria-selected={filter === f.id}
+              className={`orders-filters__chip${filter === f.id ? ' orders-filters__chip--active' : ''}`}
+              onClick={() => setFilter(f.id)}
+            >
+              {f.label}
+              <span className="orders-filters__count">{filterCounts[f.id] ?? 0}</span>
+            </button>
+          ))}
+        </div>
       ) : null}
 
       {sorted.length === 0 ? (
         <div className="orders-empty">
-          <div className="orders-empty__icon" aria-hidden>
+          <div className="orders-empty__ring" aria-hidden>
             <i className="fa-solid fa-bag-shopping" />
           </div>
           <h2 className="orders-empty__title">No orders yet</h2>
           <p className="orders-empty__text">
-            When you place an order, it appears here with live status updates and quick links to each
-            piece.
+            Your purchases will appear here with live tracking, per-item returns, and invoices.
           </p>
           <div className="orders-empty__actions">
-            <Link to="/collections" className="lux-button text-sm py-2.5 px-5">
-              Start shopping
+            <Link to="/collections" className="lux-button">
+              Explore collections
             </Link>
             {!USE_LOCAL_API && !hasToken ? (
-              <Link to="/auth" className="button-tertiary text-sm">
+              <Link to="/auth" className="orders-empty__secondary">
                 Sign in
               </Link>
             ) : null}
           </div>
         </div>
+      ) : filtered.length === 0 ? (
+        <div className="orders-empty orders-empty--compact">
+          <p className="orders-empty__text">No orders in this filter.</p>
+          <button type="button" className="orders-empty__secondary" onClick={() => setFilter('all')}>
+            Show all orders
+          </button>
+        </div>
       ) : (
         <ul className="orders-list">
-          {sorted.map((order) => {
+          {filtered.map((order) => {
             const orderId = getOrderPublicId(order)
-            const items = order.items || []
-            const status = order.status || 'Placed'
-            const tone = orderStatusTone(status)
-            const payment = formatPaymentMethodLabel(order.paymentMethod)
-            const statusNote = orderStatusNote(status)
-            const showReview = status === 'Delivered'
-
             const isExpanded = orderIdsMatch(expandedId, orderId)
-
             return (
               <li key={orderId}>
-                <article className={`order-card${isExpanded ? ' order-card--expanded' : ''}`}>
-                  <header className="order-card__status">
-                    <div className="order-card__status-main">
-                      <span
-                        className={`order-card__status-icon order-card__status-icon--${tone}`}
-                        aria-hidden
-                      >
-                        <i className={orderStatusIcon(status)} />
-                      </span>
-                      <div className="order-card__status-text">
-                        <p className={`order-card__status-label order-card__status-label--${tone}`}>
-                          {status}
-                        </p>
-                        <p className="order-card__status-date">{formatStatusWhen(order)}</p>
-                      </div>
-                    </div>
-                    <p className="order-card__order-id" title={orderId}>
-                      Order #{formatOrderId(orderId)}
-                    </p>
-                  </header>
-
-                  <div className="order-card__body">
-                    {items.map((item, index) => {
-                      const productId = item.productId
-                      const qty = item.quantity || 1
-                      const lineTotal = (item.price || 0) * qty
-                      const sizeLabel = item.size ? `Size: ${item.size}` : null
-                      const metaParts = [
-                        sizeLabel,
-                        `Qty: ${qty}`,
-                        `₹${lineTotal.toLocaleString('en-IN')}`,
-                      ].filter(Boolean)
-
-                      const productRow = (
-                        <>
-                          <img
-                            src={productImageUrl(item.image, 'thumb')}
-                            alt={item.name || 'Ordered item'}
-                            className="order-card__thumb"
-                            loading="lazy"
-                          />
-                          <div className="order-card__info">
-                            <p className="order-card__brand">{STORE_NAME}</p>
-                            <p className="order-card__title">{item.name}</p>
-                            <p className="order-card__meta">{metaParts.join(' · ')}</p>
-                          </div>
-                          <i className="fa-solid fa-chevron-right order-card__chevron" aria-hidden />
-                        </>
-                      )
-
-                      return (
-                        <div key={`${orderId}-${index}`} className="order-card__item">
-                          {productId ? (
-                            <Link to={`/product/${productId}`} className="order-card__product">
-                              {productRow}
-                            </Link>
-                          ) : (
-                            <div className="order-card__product">{productRow}</div>
-                          )}
-
-                          {statusNote && index === 0 ? (
-                            <p className="order-card__note">
-                              <i className="fa-solid fa-circle-info order-card__note-icon" aria-hidden />
-                              {statusNote}
-                            </p>
-                          ) : null}
-
-                          {showReview && productId ? (
-                            <div className="order-card__review">
-                              <span className="order-card__review-label">
-                                Review this piece as a verified buyer
-                              </span>
-                              <span className="order-card__review-stars" aria-hidden>
-                                <i className="fa-regular fa-star" />
-                                <i className="fa-regular fa-star" />
-                                <i className="fa-regular fa-star" />
-                                <i className="fa-regular fa-star" />
-                                <i className="fa-regular fa-star" />
-                              </span>
-                              <Link
-                                to={`/product/${productId}#reviews`}
-                                className="order-card__review-cta"
-                              >
-                                Write review
-                              </Link>
-                            </div>
-                          ) : null}
-                        </div>
-                      )
-                    })}
-                  </div>
-
-                  <footer className="order-card__foot">
-                    <span className="order-card__total">
-                      Order total: ₹{Number(order.total).toLocaleString('en-IN')}
-                      {payment ? ` · ${payment}` : ''}
-                      {` · Payment ${formatPaymentStatusLabel(order.paymentStatus)}`}
-                    </span>
-                    <div className="order-card__foot-actions">
-                      <button
-                        type="button"
-                        className={`order-card__foot-link${isExpanded ? ' order-card__foot-link--active' : ''}`}
-                        onClick={() => toggleExpand(orderId)}
-                        aria-expanded={isExpanded}
-                        aria-controls={`order-expand-${orderId}`}
-                      >
-                        {isExpanded ? 'Hide details' : 'View details'}
-                      </button>
-                      {status === 'Delivered' ? (
-                        <Link to="/collections" className="order-card__foot-link">
-                          Shop again
-                        </Link>
-                      ) : (
-                        <a
-                          href={whatsappUrl(`Hi, I have a question about order ${orderId}.`)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="order-card__foot-link"
-                        >
-                          Need help?
-                        </a>
-                      )}
-                    </div>
-                  </footer>
-
-                  {isExpanded ? (
-                    <OrderDetailPanel
-                      order={expandedOrder && orderIdsMatch(getOrderPublicId(expandedOrder), orderId) ? expandedOrder : order}
-                      onOrderUpdated={handleOrderUpdated}
-                      onClose={() => setExpandedId(null)}
-                    />
-                  ) : null}
-                </article>
+                <OrderCard
+                  order={order}
+                  isExpanded={isExpanded}
+                  expandedOrder={expandedOrder}
+                  onToggleExpand={toggleExpand}
+                  onOrderUpdated={handleOrderUpdated}
+                  onCloseDetail={() => setExpandedId(null)}
+                />
               </li>
             )
           })}
         </ul>
       )}
 
-      {expandedId && !listExpandedOrder && fetchedExpandedOrder && orderIdsMatch(getOrderPublicId(fetchedExpandedOrder), expandedId) ? (
-        <article className="order-card order-card--expanded orders-orphan-detail">
+      {expandedId &&
+      !listExpandedOrder &&
+      fetchedExpandedOrder &&
+      orderIdsMatch(getOrderPublicId(fetchedExpandedOrder), expandedId) ? (
+        <article className="order-card order-card--open orders-orphan-detail">
           <OrderDetailPanel
             order={fetchedExpandedOrder}
             onOrderUpdated={handleOrderUpdated}
@@ -468,22 +362,18 @@ function Order() {
       <SiteHeader />
 
       <div className="account-page orders-page section-container">
-        <header className="account-page__hero orders-page__hero">
-          <div className="orders-page__hero-copy">
-            <p className="text-kicker orders-page__kicker">Account</p>
-            <h1 className="account-page__hero-title">Your orders</h1>
-            <p className="account-page__hero-sub orders-page__hero-sub">
-              Track delivery and revisit pieces you love.
+        <header className="orders-page__header">
+          <div>
+            <p className="orders-page__kicker">My account</p>
+            <h1 className="orders-page__title">Orders</h1>
+            <p className="orders-page__subtitle">
+              Track shipments, manage returns per item, and download invoices.
             </p>
           </div>
-          <div className="account-page__hero-actions orders-page__hero-actions">
-            <Link to="/profile" className="account-page__hero-link">
-              <i className="fa-solid fa-user text-xs" aria-hidden />
-              Profile
-            </Link>
-            <Link to="/collections" className="account-page__hero-link">
-              <i className="fa-solid fa-gem text-xs" aria-hidden />
-              Shop
+          <div className="orders-page__header-actions">
+            <Link to="/collections" className="orders-page__header-link">
+              <i className="fa-solid fa-gem" aria-hidden />
+              Continue shopping
             </Link>
           </div>
         </header>

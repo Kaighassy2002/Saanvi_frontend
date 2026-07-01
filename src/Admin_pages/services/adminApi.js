@@ -188,6 +188,20 @@ export async function rmaOrderAction(authFetch, publicId, step, note) {
   })
 }
 
+export async function cancelOrderLineItem(authFetch, publicId, lineId, body = {}) {
+  return authFetch(
+    `/api/admin/orders/${encodeURIComponent(publicId)}/items/${encodeURIComponent(lineId)}/cancel`,
+    { method: 'POST', body }
+  )
+}
+
+export async function lineRmaOrderAction(authFetch, publicId, lineId, step, note) {
+  return authFetch(
+    `/api/admin/orders/${encodeURIComponent(publicId)}/items/${encodeURIComponent(lineId)}/rma`,
+    { method: 'POST', body: { step, note } }
+  )
+}
+
 export async function generateCourierAwb(authFetch, publicId, partner) {
   return authFetch(`/api/admin/orders/${encodeURIComponent(publicId)}/courier/awb`, {
     method: 'POST',

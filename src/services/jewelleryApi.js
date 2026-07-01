@@ -225,6 +225,20 @@ export async function requestOrderReturn(orderId, note = '') {
   })
 }
 
+export async function cancelOrderLineItem(orderId, lineId, note = '') {
+  return jewelleryFetch(
+    `/api/auth/orders/${encodeURIComponent(orderId)}/items/${encodeURIComponent(lineId)}/cancel`,
+    { method: 'POST', body: { note }, auth: 'customer' }
+  )
+}
+
+export async function returnOrderLineItem(orderId, lineId, note = '') {
+  return jewelleryFetch(
+    `/api/auth/orders/${encodeURIComponent(orderId)}/items/${encodeURIComponent(lineId)}/return-request`,
+    { method: 'POST', body: { note }, auth: 'customer' }
+  )
+}
+
 // --- Admin ---
 
 export async function adminLoginRequest(email, password) {

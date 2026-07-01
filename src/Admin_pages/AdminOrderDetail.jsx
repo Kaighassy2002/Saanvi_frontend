@@ -11,7 +11,16 @@ import {
   patchOrder,
   processOrderRefund,
   rmaOrderAction,
+  cancelOrderLineItem,
+  lineRmaOrderAction,
 } from './services/adminApi'
+import {
+  canCustomerCancel,
+  lineStatusLabel,
+  normalizeLineItem,
+  getLineRefundDisplay,
+  lineRefundDisplayClass,
+} from '../services/orderWorkflow'
 import { useAdminToast } from './shared/AdminToastProvider'
 import AdminStatusBadge, { ORDER_STATUS_OPTIONS, PAYMENT_STATUS_OPTIONS } from './components/AdminStatusBadge'
 import AdminErrorBanner from './components/AdminErrorBanner'
@@ -350,12 +359,48 @@ function AdminOrderDetail() {
       setOrder(updated)
       setPaymentStatus(updated.paymentStatus || paymentStatus)
       setRefundOpen(false)
-      setRefundAmount('')
-      setRefundReason('')
-      setRefundNote('')
       toast('Refund processed.')
-    } catch (err) {
-      toast(err?.message || 'Refund failed', 'error')
+    } catch (e) {
+      toast(e?.message || 'Refund failed', 'error')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleLineCancel = async (lineId, lineName) => {
+    const note = window.prompt(`Cancel "${lineName}"? Optional note:`)
+    if (note === null) return
+    setSaving(true)
+    try {
+      const updated = await cancelOrderLineItem(authFetch, publicId, lineId, {
+        note: note.trim() || 'Cancelled by admin',
+      })
+      setOrder(updated)
+      setStatus(updated.status || status)
+      setPaymentStatus(updated.paymentStatus || paymentStatus)
+      toast('Line item cancelled.')
+    } catch (e) {
+      toast(e?.message || 'Could not cancel line', 'error')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleLineRma = async (lineId, step, lineName) => {
+    setSaving(true)
+    try {
+      const updated = await lineRmaOrderAction(
+        authFetch,
+        publicId,
+        lineId,
+        step,
+        step === 'refund' ? `Refund for ${lineName}` : `${step} — ${lineName}`
+      )
+      setOrder(updated)
+      setPaymentStatus(updated.paymentStatus || paymentStatus)
+      toast(`Line RMA: ${step}`)
+    } catch (e) {
+      toast(e?.message || 'Line RMA failed', 'error')
     } finally {
       setSaving(false)
     }
@@ -518,12 +563,21 @@ function AdminOrderDetail() {
               ) : (
                 <div className="space-y-3">
                   {items.map((item, i) => {
+                    const line = normalizeLineItem(item, i, order)
                     const qty = Number(item.quantity || item.qty || 1)
-                    const totalLine = lineTotal(item)
+                    const totalLine = line.lineSubtotal ?? lineTotal(item)
                     const unit = qty > 0 ? totalLine / qty : totalLine
                     const productId = item.productId || item.id
+                    const lineName = item.name || item.title || 'Item'
+                    const orderStatus = order.status || 'Placed'
+                    const canCancel =
+                      line.status === 'active' && canCustomerCancel(orderStatus)
+                    const canRma = ['return_requested', 'return_received', 'returned'].includes(
+                      line.status
+                    )
+                    const refundDisplay = getLineRefundDisplay(line, order)
                     return (
-                      <div key={i} className="admin-order-line">
+                      <div key={line.lineId} className="admin-order-line">
                         <span className="admin-product-row__thumb h-14 w-14 shrink-0">
                           {item.image ? (
                             <img src={item.image} alt="" className="h-full w-full object-cover" />
@@ -537,10 +591,10 @@ function AdminOrderDetail() {
                               to={`/admin/products/${encodeURIComponent(productId)}/edit`}
                               className="text-sm font-medium text-ink hover:text-[#9f7a2c] hover:underline truncate block"
                             >
-                              {item.name || item.title || 'Item'}
+                              {lineName}
                             </Link>
                           ) : (
-                            <p className="text-sm font-medium text-ink truncate">{item.name || item.title || 'Item'}</p>
+                            <p className="text-sm font-medium text-ink truncate">{lineName}</p>
                           )}
                           {(item.variantName || item.sku) && (
                             <p className="text-xs text-muted truncate">
@@ -549,7 +603,59 @@ function AdminOrderDetail() {
                           )}
                           <p className="text-xs text-muted mt-0.5">
                             {formatPrice(unit)} × {qty}
+                            {line.status !== 'active' ? ` · ${lineStatusLabel(line.status)}` : ''}
                           </p>
+                          {refundDisplay ? (
+                            <p
+                              className={`text-[10px] mt-0.5 ${lineRefundDisplayClass(refundDisplay.state)}`}
+                            >
+                              {refundDisplay.label}
+                            </p>
+                          ) : null}
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {canCancel ? (
+                              <button
+                                type="button"
+                                disabled={saving}
+                                className="admin-quick-action text-[10px] py-1 px-2"
+                                onClick={() => handleLineCancel(line.lineId, lineName)}
+                              >
+                                Cancel line
+                              </button>
+                            ) : null}
+                            {line.status === 'return_requested' ? (
+                              <button
+                                type="button"
+                                disabled={saving}
+                                className="admin-quick-action text-[10px] py-1 px-2"
+                                onClick={() => handleLineRma(line.lineId, 'receive', lineName)}
+                              >
+                                Receive
+                              </button>
+                            ) : null}
+                            {canRma ? (
+                              <button
+                                type="button"
+                                disabled={saving}
+                                className="admin-quick-action text-[10px] py-1 px-2"
+                                onClick={() => handleLineRma(line.lineId, 'restock', lineName)}
+                              >
+                                Restock
+                              </button>
+                            ) : null}
+                            {['return_requested', 'return_received', 'returned'].includes(
+                              line.status
+                            ) && line.status !== 'refunded' ? (
+                              <button
+                                type="button"
+                                disabled={saving}
+                                className="admin-quick-action text-[10px] py-1 px-2"
+                                onClick={() => handleLineRma(line.lineId, 'refund', lineName)}
+                              >
+                                Refund line
+                              </button>
+                            ) : null}
+                          </div>
                         </div>
                         <p className="text-sm font-semibold tabular-nums text-ink shrink-0">{formatPrice(totalLine)}</p>
                       </div>

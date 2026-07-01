@@ -7,4 +7,4 @@ Disallow: /cart
 Disallow: /auth
 Disallow: /profile
 
-Sitemap: /sitemap.xml
+Sitemap: https://www.aashmikadesigns.com/sitemap.xml

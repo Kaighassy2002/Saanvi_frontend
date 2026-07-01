@@ -5,6 +5,8 @@ import {
   getStorefrontOrdersForCurrentUser,
   requestLocalOrderCancel,
   requestLocalOrderReturn,
+  requestLocalOrderLineCancel,
+  requestLocalOrderLineReturn,
 } from './localOrders'
 import {
   fetchBackendMyOrders,
@@ -12,6 +14,8 @@ import {
   placeBackendOrder,
   requestOrderCancellation,
   requestOrderReturn,
+  cancelOrderLineItem,
+  returnOrderLineItem,
 } from './jewelleryApi'
 import { getOrderPublicId } from './orderWorkflow'
 
@@ -55,4 +59,14 @@ export async function cancelMyOrder(orderId, note = '') {
 export async function returnMyOrder(orderId, note = '') {
   if (USE_LOCAL_API) return requestLocalOrderReturn(orderId, note)
   return requestOrderReturn(orderId, note)
+}
+
+export async function cancelMyOrderLine(orderId, lineId, note = '') {
+  if (USE_LOCAL_API) return requestLocalOrderLineCancel(orderId, lineId, note)
+  return cancelOrderLineItem(orderId, lineId, note)
+}
+
+export async function returnMyOrderLine(orderId, lineId, note = '') {
+  if (USE_LOCAL_API) return requestLocalOrderLineReturn(orderId, lineId, note)
+  return returnOrderLineItem(orderId, lineId, note)
 }
