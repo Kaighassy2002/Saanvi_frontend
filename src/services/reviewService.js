@@ -1,5 +1,6 @@
 import { USE_LOCAL_API, STORAGE_KEYS } from './config'
 import { jewelleryFetch } from './jewelleryApi'
+import { isCustomerLoggedIn } from './customerStorageScope'
 import {
   localAdminDeleteReview,
   localAdminListReviews,
@@ -24,10 +25,8 @@ export async function fetchProductReviews(productId) {
   if (USE_LOCAL_API) {
     return localListProductReviews(productId, localCustomerId())
   }
-  const token = localStorage.getItem(STORAGE_KEYS.customerToken)
   return jewelleryFetch(`/api/products/${encodeURIComponent(productId)}/reviews`, {
-    auth: false,
-    token: token || null,
+    auth: 'customer',
   })
 }
 
@@ -45,7 +44,7 @@ export async function submitProductReview(productId, { rating, title, body }) {
         /* ignore */
       }
     }
-    if (!localStorage.getItem(STORAGE_KEYS.customerToken)) {
+    if (!isCustomerLoggedIn()) {
       throw new Error('Please sign in to leave a review')
     }
     return localCreateReview({

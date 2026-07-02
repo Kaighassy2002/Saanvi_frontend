@@ -176,8 +176,8 @@ export function RevenueLineChart({ series = [], formatPrice }) {
             <stop offset="100%" stopColor="#c9a34a" stopOpacity="0.02" />
           </linearGradient>
         </defs>
-        {yTicks.map((tick) => (
-          <g key={tick.label}>
+        {yTicks.map((tick, i) => (
+          <g key={`y-tick-${i}-${tick.y}`}>
             <line x1={padL} x2={width - padR} y1={tick.y} y2={tick.y} stroke="#efe2d1" strokeWidth="1" />
             <text x={padL - 8} y={tick.y + 4} textAnchor="end" className="fill-[#8a7573] text-[9px] font-sans">
               {tick.label}

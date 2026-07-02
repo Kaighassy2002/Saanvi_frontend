@@ -87,15 +87,18 @@ function PurchaseBlock({
           type="button"
           onClick={onAddToCart}
           disabled={stock <= 0}
-          className="lux-button product-detail__btn-primary disabled:opacity-50"
+          className="add-to-bag-btn product-detail__btn-primary"
         >
           {addedFeedback ? (
             <>
-              <i className="fa-solid fa-check mr-1.5" aria-hidden />
+              <i className="fa-solid fa-check" aria-hidden />
               Added to bag
             </>
           ) : (
-            'Add to bag'
+            <>
+              <i className="fa-solid fa-bag-shopping" aria-hidden />
+              Add to bag
+            </>
           )}
         </button>
         <button
@@ -539,9 +542,13 @@ function ProductDetailView({ product, productId }) {
             type="button"
             onClick={handleAddToCart}
             disabled={stock <= 0}
-            className="product-detail__sticky-add"
+            className="add-to-bag-btn product-detail__sticky-add"
           >
-            {addedFeedback ? 'Added' : 'Add'}
+            <i
+              className={`fa-solid ${addedFeedback ? 'fa-check' : 'fa-bag-shopping'}`}
+              aria-hidden
+            />
+            {addedFeedback ? 'Added' : 'Add to bag'}
           </button>
           <button
             type="button"

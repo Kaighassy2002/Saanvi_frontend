@@ -4,7 +4,11 @@ import Footer from '../Components/Footer'
 import SiteHeader from '../Components/SiteHeader'
 import '../Styles/user-profile.css'
 import { CUSTOMER_SESSION_CHANGED_EVENT, STORAGE_KEYS } from '../../services/config'
-import { notifyCustomerSessionChanged } from '../../services/customerStorageScope'
+import {
+  clearCustomerProfileCache,
+  isCustomerLoggedIn,
+  notifyCustomerSessionChanged,
+} from '../../services/customerStorageScope'
 import {
   createAddressId,
   fetchSavedAddressesFromServer,
@@ -90,8 +94,7 @@ function UserProfile() {
   }, [])
 
   const loadProfile = useCallback(async () => {
-    const token = localStorage.getItem(STORAGE_KEYS.customerToken)
-    if (!token) {
+    if (!isCustomerLoggedIn()) {
       navigate('/auth', { replace: true })
       return
     }
@@ -106,8 +109,7 @@ function UserProfile() {
       applyProfileToStorage(data)
     } catch (err) {
       if (err?.status === 401 || err?.statusCode === 401) {
-        localStorage.removeItem(STORAGE_KEYS.customerToken)
-        localStorage.removeItem(STORAGE_KEYS.customerProfile)
+        clearCustomerProfileCache()
         notifyCustomerSessionChanged()
         navigate('/auth', { replace: true })
         return
@@ -266,8 +268,7 @@ function UserProfile() {
       setProfileMessage({ tone: 'success', text: 'Profile updated.' })
     } catch (err) {
       if (err?.status === 401 || err?.statusCode === 401) {
-        localStorage.removeItem(STORAGE_KEYS.customerToken)
-        localStorage.removeItem(STORAGE_KEYS.customerProfile)
+        clearCustomerProfileCache()
         notifyCustomerSessionChanged()
         navigate('/auth', { replace: true })
         return

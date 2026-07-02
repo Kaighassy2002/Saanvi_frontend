@@ -9,7 +9,6 @@ import OrderDetailPanel from '../Components/OrderDetailPanel'
 import {
   CUSTOMER_SESSION_CHANGED_EVENT,
   STOREFRONT_ORDERS_UPDATED_EVENT,
-  STORAGE_KEYS,
   USE_LOCAL_API,
 } from '../../services/config'
 import { whatsappUrl, STORE_NAME } from '../../services/storefrontConstants'
@@ -199,9 +198,7 @@ function Order() {
     setExpandedId((prev) => (orderIdsMatch(prev, id) ? null : id))
   }
 
-  const hasToken =
-    typeof localStorage !== 'undefined' && !!localStorage.getItem(STORAGE_KEYS.customerToken)
-  const showSignInHint = !USE_LOCAL_API && !hasToken && sorted.length === 0 && !placedId
+  const showSignInHint = !USE_LOCAL_API && !isCustomerLoggedIn() && sorted.length === 0 && !placedId
 
   const mainContent = loading ? (
     <div className="orders-loading" aria-busy="true" aria-label="Loading orders">
@@ -300,7 +297,7 @@ function Order() {
             <Link to="/collections" className="lux-button">
               Explore collections
             </Link>
-            {!USE_LOCAL_API && !hasToken ? (
+            {!USE_LOCAL_API && !isCustomerLoggedIn() ? (
               <Link to="/auth" className="orders-empty__secondary">
                 Sign in
               </Link>

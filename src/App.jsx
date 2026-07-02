@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
 import './App.css'
 import { AdminAuthProvider } from './context/AdminAuthProvider'
+import { CustomerAuthProvider } from './context/CustomerAuthProvider'
 import { CartProvider } from './context/CartProvider'
 import StoreSettingsProvider from './context/StoreSettingsProvider'
 import CatalogProvider from './context/CatalogProvider'
@@ -67,6 +68,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AdminAuthProvider>
+        <CustomerAuthProvider>
         <StoreSettingsProvider>
           <CatalogProvider>
             <CartProvider>
@@ -129,6 +131,7 @@ function App() {
             </CartProvider>
           </CatalogProvider>
         </StoreSettingsProvider>
+        </CustomerAuthProvider>
       </AdminAuthProvider>
     </ErrorBoundary>
   )

@@ -72,10 +72,9 @@ export async function duplicateProduct(authFetch, id) {
 }
 
 export async function downloadProductsExport() {
-  const { API_BASE, STORAGE_KEYS } = await import('../../services/config')
-  const token = localStorage.getItem(STORAGE_KEYS.adminToken)
+  const { API_BASE } = await import('../../services/config')
   const res = await fetch(`${API_BASE}/api/admin/products/export`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    credentials: 'include',
   })
   if (!res.ok) throw new Error('Export failed')
   return res.text()
@@ -127,10 +126,9 @@ export async function listOrdersAll(authFetch) {
 }
 
 export async function downloadOrdersExport(params = {}) {
-  const { API_BASE, STORAGE_KEYS } = await import('../../services/config')
-  const token = localStorage.getItem(STORAGE_KEYS.adminToken)
+  const { API_BASE } = await import('../../services/config')
   const res = await fetch(`${API_BASE}/api/admin/orders/export${buildQuery(params)}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    credentials: 'include',
   })
   if (!res.ok) throw new Error('Export failed')
   return res.blob()
@@ -155,10 +153,9 @@ export async function bulkOrders(authFetch, ids, action, note) {
 }
 
 export async function downloadOrderInvoice(publicId) {
-  const { API_BASE, STORAGE_KEYS } = await import('../../services/config')
-  const token = localStorage.getItem(STORAGE_KEYS.adminToken)
+  const { API_BASE } = await import('../../services/config')
   const res = await fetch(`${API_BASE}/api/admin/orders/${encodeURIComponent(publicId)}/invoice`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    credentials: 'include',
   })
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))

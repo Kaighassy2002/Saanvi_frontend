@@ -112,8 +112,8 @@ function KpiTile({ icon, label, value, sublabel, trend, periodLabel, to }) {
 function KpiRow({ items, periodLabel }) {
   return (
     <div className="admin-kpi-row">
-      {items.map((item) => (
-        <KpiTile key={item.key} {...item} periodLabel={periodLabel} />
+      {items.map(({ key, ...item }) => (
+        <KpiTile key={key} {...item} periodLabel={periodLabel} />
       ))}
     </div>
   )

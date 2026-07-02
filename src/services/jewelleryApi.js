@@ -1,4 +1,4 @@
-import { API_BASE, STORAGE_KEYS } from './config'
+import { API_BASE } from './config'
 import { reportApiError } from '../monitoring/sentry'
 
 export class ApiError extends Error {
@@ -15,26 +15,19 @@ export class ApiError extends Error {
 
 /**
  * @param {string} path - e.g. /api/products
- * @param {{ method?: string, body?: object, token?: string | null, auth?: 'customer' | 'admin' | false }} options
+ * @param {{ method?: string, body?: object, auth?: 'customer' | 'admin' | false, silentAuth?: boolean }} options
  */
 export async function jewelleryFetch(path, options = {}) {
-  const { method = 'GET', body, auth = false } = options
+  const { method = 'GET', body, silentAuth = false } = options
   const headers = { Accept: 'application/json' }
   if (body !== undefined) headers['Content-Type'] = 'application/json'
-
-  let token = options.token
-  if (token === undefined && auth === 'customer') {
-    token = localStorage.getItem(STORAGE_KEYS.customerToken)
-  } else if (token === undefined && auth === 'admin') {
-    token = localStorage.getItem(STORAGE_KEYS.adminToken)
-  }
-  if (token) headers.Authorization = `Bearer ${token}`
 
   let res
   try {
     res = await fetch(`${API_BASE}${path}`, {
       method,
       headers,
+      credentials: 'include',
       body: body !== undefined ? JSON.stringify(body) : undefined,
     })
   } catch (error) {
@@ -56,7 +49,10 @@ export async function jewelleryFetch(path, options = {}) {
     const msg =
       typeof data === 'object' && data?.message ? data.message : text || res.statusText
     const apiError = new ApiError(String(msg), res.status, typeof data === 'object' ? data : null)
-    reportApiError(apiError, { path, method, status: res.status })
+    const isExpectedAuthProbe = silentAuth && res.status === 401
+    if (!isExpectedAuthProbe) {
+      reportApiError(apiError, { path, method, status: res.status })
+    }
     throw apiError
   }
 
@@ -115,7 +111,7 @@ export async function customerGoogleLogin(body) {
 }
 
 export async function customerGetMe() {
-  return jewelleryFetch('/api/auth/me', { auth: 'customer' })
+  return jewelleryFetch('/api/auth/me', { auth: 'customer', silentAuth: true })
 }
 
 export async function customerPatchMe(body) {
@@ -168,6 +164,10 @@ export async function customerForgotPasswordReset(resetToken, newPassword) {
     body: { resetToken, newPassword },
     auth: false,
   })
+}
+
+export async function customerLogout() {
+  return jewelleryFetch('/api/auth/logout', { method: 'POST', auth: false })
 }
 
 // --- Storefront orders ---
@@ -247,6 +247,10 @@ export async function adminLoginRequest(email, password) {
     body: { email, password },
     auth: false,
   })
+}
+
+export async function adminLogout() {
+  return jewelleryFetch('/api/admin/auth/logout', { method: 'POST', auth: false })
 }
 
 export async function adminFetch(path, options = {}) {

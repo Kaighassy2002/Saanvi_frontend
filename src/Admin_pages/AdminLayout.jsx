@@ -62,7 +62,7 @@ const NAV_GROUPS = [
 function AdminLayoutInner() {
   usePageMeta({ title: 'Admin', noIndex: true })
 
-  const { isAdmin, logout, profile, authFetch } = useAdminAuth()
+  const { isAdmin, logout, profile, authFetch, loading } = useAdminAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -128,6 +128,14 @@ function AdminLayoutInner() {
     if (isAdmin) loadBadges()
   }, [isAdmin, loadBadges])
 
+  if (loading) {
+    return (
+      <div className="admin-shell flex min-h-screen items-center justify-center bg-[#faf7f2] text-sm text-muted">
+        Checking session…
+      </div>
+    )
+  }
+
   if (!isAdmin) return <Navigate to="/admin/login" replace />
 
   if (!canAccessAdminPath(profile, location.pathname)) {
@@ -142,8 +150,8 @@ function AdminLayoutInner() {
     }),
   })).filter((group) => group.items.length > 0)
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     navigate('/admin/login')
   }
 

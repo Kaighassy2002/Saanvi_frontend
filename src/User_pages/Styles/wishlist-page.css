@@ -226,36 +226,10 @@
 
 .wishlist-item__bag {
   flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
   min-height: 2.125rem;
   padding: 0.45rem 0.65rem;
-  border: none;
-  border-radius: 0.45rem;
-  background: var(--color-royal-700);
-  font-family: var(--font-sans);
   font-size: 0.6875rem;
-  font-weight: 700;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
-}
-
-.wishlist-item__bag:hover:not(:disabled) {
-  background: var(--color-royal-800);
-}
-
-.wishlist-item__bag:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.wishlist-item__bag:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
 }
 
 .wishlist-item__bag i {

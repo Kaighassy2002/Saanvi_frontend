@@ -1,22 +1,48 @@
-import { CUSTOMER_SESSION_CHANGED_EVENT, STORAGE_KEYS } from './config'
-import { decodeJwtPayload } from './jwtUtils'
+import { API_BASE, CUSTOMER_SESSION_CHANGED_EVENT, STORAGE_KEYS, USE_LOCAL_API } from './config'
 
-/** True when a customer JWT is stored (browser only). */
-export function isCustomerLoggedIn() {
-  if (typeof localStorage === 'undefined') return false
-  return Boolean(localStorage.getItem(STORAGE_KEYS.customerToken))
+/** @deprecated JWT is no longer stored — kept for one-time migration cleanup. */
+const LEGACY_TOKEN_KEY = STORAGE_KEYS.customerToken
+
+export function readCachedCustomerProfile() {
+  if (typeof localStorage === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.customerProfile)
+    if (!raw) return null
+    const p = JSON.parse(raw)
+    return p && typeof p === 'object' ? p : null
+  } catch {
+    return null
+  }
 }
 
-/** `guest` when logged out; Mongo user id string when JWT present. */
-export function getCustomerStorageScope() {
-  try {
-    const token = localStorage.getItem(STORAGE_KEYS.customerToken)
-    if (!token) return 'guest'
-    const p = decodeJwtPayload(token)
-    return p?.sub ? String(p.sub) : 'guest'
-  } catch {
-    return 'guest'
+export function cacheCustomerProfile(user) {
+  if (typeof localStorage === 'undefined' || !user || typeof user !== 'object') return
+  localStorage.setItem(STORAGE_KEYS.customerProfile, JSON.stringify(user))
+}
+
+export function clearCustomerProfileCache() {
+  if (typeof localStorage === 'undefined') return
+  localStorage.removeItem(STORAGE_KEYS.customerProfile)
+  localStorage.removeItem(LEGACY_TOKEN_KEY)
+}
+
+/** Remove legacy JWT keys from older builds (httpOnly cookies only now). */
+export function migrateLegacyCustomerToken() {
+  if (typeof localStorage === 'undefined') return
+  if (localStorage.getItem(LEGACY_TOKEN_KEY)) {
+    localStorage.removeItem(LEGACY_TOKEN_KEY)
   }
+}
+
+/** True when a customer profile is cached (demo mode) or cookie session is active. */
+export function isCustomerLoggedIn() {
+  return Boolean(readCachedCustomerProfile())
+}
+
+/** `guest` when logged out; Mongo user id string when profile present. */
+export function getCustomerStorageScope() {
+  const p = readCachedCustomerProfile()
+  return p?.id ? String(p.id) : 'guest'
 }
 
 export function scopedCartKey(scope) {
@@ -37,13 +63,27 @@ export function notifyCustomerSessionChanged() {
   window.dispatchEvent(new Event(CUSTOMER_SESSION_CHANGED_EVENT))
 }
 
-/** Drop stale JWT after 401 so guest local cart/wishlist is used without repeat API errors. */
+export async function customerLogoutRequest() {
+  if (USE_LOCAL_API || !API_BASE) return
+  try {
+    await fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', credentials: 'include' })
+  } catch {
+    /* best-effort */
+  }
+}
+
+/** Clear cached profile and httpOnly cookie after 401. */
 export function clearExpiredCustomerSession(err) {
   const status = err?.status ?? err?.statusCode
   if (status !== 401) return false
-  if (typeof localStorage === 'undefined') return false
-  localStorage.removeItem(STORAGE_KEYS.customerToken)
-  localStorage.removeItem(STORAGE_KEYS.customerProfile)
+  void customerLogoutRequest()
+  clearCustomerProfileCache()
   notifyCustomerSessionChanged()
   return true
+}
+
+export async function logoutCustomerSession() {
+  await customerLogoutRequest()
+  clearCustomerProfileCache()
+  notifyCustomerSessionChanged()
 }

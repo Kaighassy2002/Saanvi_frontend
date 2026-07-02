@@ -4,7 +4,6 @@ const STORE_SLUG = 'e2e-test-store'
 
 test('authenticated checkout page shows order placement UI', async ({ page }) => {
   await page.addInitScript((slug) => {
-    const demoToken = 'local-demo-token'
     const profile = {
       id: 'e2e-user',
       email: 'e2e@example.com',
@@ -13,9 +12,7 @@ test('authenticated checkout page shows order placement UI', async ({ page }) =>
       name: 'E2E Tester',
     }
     const cartKey = `${slug}_shop_cart::__scope_guest`
-    const tokenKey = `${slug}_customer_token`
     const profileKey = `${slug}_customer_profile`
-    localStorage.setItem(tokenKey, demoToken)
     localStorage.setItem(profileKey, JSON.stringify(profile))
     localStorage.setItem(
       cartKey,

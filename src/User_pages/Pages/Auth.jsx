@@ -4,8 +4,9 @@ import BrandLogo from '../Components/BrandLogo'
 import Footer from '../Components/Footer'
 import SiteHeader from '../Components/SiteHeader'
 import { GoogleLogin } from '@react-oauth/google'
-import { GOOGLE_CLIENT_ID, STORAGE_KEYS, USE_LOCAL_API } from '../../services/config'
-import { notifyCustomerSessionChanged } from '../../services/customerStorageScope'
+import { GOOGLE_CLIENT_ID, USE_LOCAL_API } from '../../services/config'
+import { cacheCustomerProfile, notifyCustomerSessionChanged } from '../../services/customerStorageScope'
+import { useCustomerAuth } from '../../context/CustomerAuthProvider'
 import {
   customerLogin,
   customerGoogleLogin,
@@ -24,9 +25,8 @@ function safeCustomerRedirect(raw) {
   return t
 }
 
-function persistSession(token, user) {
-  localStorage.setItem(STORAGE_KEYS.customerToken, token)
-  localStorage.setItem(STORAGE_KEYS.customerProfile, JSON.stringify(user))
+function persistSession(user) {
+  cacheCustomerProfile(user)
   notifyCustomerSessionChanged()
 }
 
@@ -45,6 +45,7 @@ const MOBILE_PERKS = [
 
 function Auth() {
   const navigate = useNavigate()
+  const { login: setCustomerAuth } = useCustomerAuth() || {}
   const [searchParams] = useSearchParams()
   const redirectTarget = () => safeCustomerRedirect(searchParams.get('redirect'))
 
@@ -129,7 +130,8 @@ function Auth() {
       name: `${firstName.trim() || 'Guest'} ${lastName.trim() || 'User'}`.trim(),
       phone: phone.replace(/\D/g, ''),
     }
-    persistSession('local-demo-token', user)
+    persistSession(user)
+    setCustomerAuth?.(user)
     showMessage('Signed in (demo mode).', 'success')
     navigate(redirectTarget())
   }
@@ -149,7 +151,8 @@ function Auth() {
         credential,
         intent: mode === 'register' ? 'register' : 'login',
       })
-      persistSession(data.token, data.user)
+      persistSession(data.user)
+      setCustomerAuth?.(data.user)
       showMessage(
         mode === 'register' ? 'Account created with Google.' : 'Signed in with Google.',
         'success',
@@ -187,7 +190,8 @@ function Auth() {
           lastName: lastName.trim(),
           phone: phone.replace(/\D/g, ''),
         })
-        persistSession(data.token, data.user)
+        persistSession(data.user)
+        setCustomerAuth?.(data.user)
         showMessage('Account created. Welcome!', 'success')
         navigate(redirectTarget())
         return
@@ -197,7 +201,8 @@ function Auth() {
         email: email.trim(),
         password,
       })
-      persistSession(data.token, data.user)
+      persistSession(data.user)
+      setCustomerAuth?.(data.user)
       showMessage('Signed in.', 'success')
       navigate(redirectTarget())
     } catch (err) {

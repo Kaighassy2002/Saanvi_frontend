@@ -163,6 +163,41 @@
     @apply inline-flex items-center justify-center gap-2 rounded-full border border-[#d9c19a] bg-white/10 px-6 py-3 font-sans text-sm font-medium uppercase tracking-[0.12em] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-sm transition duration-300 hover:-translate-y-0.5 hover:border-[#7a2c3a] hover:bg-white/90 hover:text-[#7a2c3a] hover:shadow-[0_18px_34px_-22px_rgba(58,21,29,0.68)] sm:text-base;
   }
 
+  .add-to-bag-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: var(--color-royal-700);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .add-to-bag-btn:hover:not(:disabled) {
+    background: var(--color-royal-800);
+  }
+
+  .add-to-bag-btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .add-to-bag-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .add-to-bag-btn i {
+    font-size: 0.9em;
+  }
+
   .section-heading {
     @apply font-bodoni text-3xl font-medium tracking-[0.04em] text-ink sm:text-4xl;
   }

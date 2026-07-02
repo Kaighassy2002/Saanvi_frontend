@@ -4,8 +4,11 @@ import { useCart } from '../../hooks/useCart'
 import { useCartDrawer } from '../../hooks/useCartDrawer'
 import { useWishlist } from '../../hooks/useWishlist'
 import { useProductSearchQuery } from '../../hooks/useProductSearchQuery'
-import { CUSTOMER_SESSION_CHANGED_EVENT, STORAGE_KEYS } from '../../services/config'
-import { notifyCustomerSessionChanged } from '../../services/customerStorageScope'
+import { CUSTOMER_SESSION_CHANGED_EVENT } from '../../services/config'
+import {
+  logoutCustomerSession,
+  readCachedCustomerProfile,
+} from '../../services/customerStorageScope'
 import { getRecentSearches, pushRecentSearch } from '../../services/recentSearches'
 import AnnouncementBar from './AnnouncementBar'
 import BrandLogo from './BrandLogo'
@@ -16,15 +19,8 @@ import '../Styles/site-header.css'
 const navItems = [{ to: '/', label: 'Home', end: true }]
 
 function readCustomerSession() {
-  const token = localStorage.getItem(STORAGE_KEYS.customerToken)
-  let profile = null
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.customerProfile)
-    if (raw) profile = JSON.parse(raw)
-  } catch {
-    profile = null
-  }
-  return { token, profile }
+  const profile = readCachedCustomerProfile()
+  return { profile }
 }
 
 function customerDisplayName(profile) {
@@ -98,7 +94,7 @@ function SiteHeader({
     return () => document.removeEventListener('mousedown', onDoc)
   }, [suggestionsOpen, showProfileMenu])
 
-  const isSignedIn = Boolean(customerSession.token)
+  const isSignedIn = Boolean(customerSession.profile)
   const displayName = customerDisplayName(customerSession.profile)
   const customerEmailLabel = customerEmail(customerSession.profile)
 
@@ -127,11 +123,9 @@ function SiteHeader({
     runSearch(searchText)
   }
 
-  const handleCustomerLogout = () => {
-    localStorage.removeItem(STORAGE_KEYS.customerToken)
-    localStorage.removeItem(STORAGE_KEYS.customerProfile)
-    notifyCustomerSessionChanged()
-    setCustomerSession({ token: null, profile: null })
+  const handleCustomerLogout = async () => {
+    await logoutCustomerSession()
+    setCustomerSession({ profile: null })
     setShowProfileMenu(false)
     setIsMenuOpen(false)
     navigate('/')

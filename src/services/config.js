@@ -28,9 +28,11 @@ export const GOOGLE_CLIENT_ID = String(import.meta.env.VITE_GOOGLE_CLIENT_ID || 
 // browser never share localStorage — no session or cart collisions.
 const _p = STORE_SLUG
 export const STORAGE_KEYS = {
+  /** @deprecated Legacy JWT key — cleared on startup; auth uses httpOnly cookies. */
   customerToken: `${_p}_customer_token`,
   customerProfile: `${_p}_customer_profile`,
   customerAddress: `${_p}_customer_address`,
+  /** @deprecated Legacy JWT key — cleared on startup; auth uses httpOnly cookies. */
   adminToken: `${_p}_admin_token`,
   products: `${_p}_catalog_products`,
   categories: `${_p}_catalog_categories`,

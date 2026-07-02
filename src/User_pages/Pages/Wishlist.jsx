@@ -33,7 +33,7 @@ function WishlistItem({ product, onAddToCart, onRemove, addingId }) {
       <div className="wishlist-item__actions">
         <button
           type="button"
-          className="wishlist-item__bag"
+          className="add-to-bag-btn wishlist-item__bag"
           disabled={busy}
           onClick={() => onAddToCart(product)}
         >
