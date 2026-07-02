@@ -198,7 +198,7 @@ function AdminOrderDetail() {
   const [trackingNumber, setTrackingNumber] = useState('')
   const [courierPartner, setCourierPartner] = useState('')
   const [internalNotes, setInternalNotes] = useState('')
-  const [courierStatus, setCourierStatus] = useState({ shiprocket: false, delhivery: false })
+  const [courierStatus, setCourierStatus] = useState({ delhivery: false })
   const [refundOpen, setRefundOpen] = useState(false)
   const [refundAmount, setRefundAmount] = useState('')
   const [refundReason, setRefundReason] = useState('')
@@ -231,7 +231,7 @@ function AdminOrderDetail() {
   useEffect(() => {
     getCourierStatus(authFetch)
       .then(setCourierStatus)
-      .catch(() => setCourierStatus({ shiprocket: false, delhivery: false }))
+      .catch(() => setCourierStatus({ delhivery: false }))
     getAdminSettings(authFetch)
       .then((s) => setCodConfirmThreshold(Number(s.codConfirmThreshold) || 10000))
       .catch(() => {})
@@ -450,9 +450,7 @@ function AdminOrderDetail() {
       .includes('delhivery') &&
     order.trackingNumber
       ? `https://www.delhivery.com/track/package/${order.trackingNumber}`
-      : order.trackingNumber
-        ? `https://shiprocket.co/tracking/${order.trackingNumber}`
-        : '')
+      : '')
 
   return (
     <>
@@ -840,16 +838,6 @@ function AdminOrderDetail() {
               <div className="mb-4 rounded-lg border border-[#efe2d1] bg-[#faf7f2] p-3 space-y-2">
                 <p className="text-xs font-medium text-ink">Courier integration</p>
                 <div className="flex flex-wrap gap-2">
-                  {courierStatus.shiprocket ? (
-                    <button
-                      type="button"
-                      disabled={saving}
-                      onClick={() => handleGenerateAwb('shiprocket')}
-                      className="admin-quick-action text-xs"
-                    >
-                      Shiprocket AWB
-                    </button>
-                  ) : null}
                   {courierStatus.delhivery ? (
                     <button
                       type="button"
@@ -860,8 +848,8 @@ function AdminOrderDetail() {
                       Delhivery AWB
                     </button>
                   ) : null}
-                  {!courierStatus.shiprocket && !courierStatus.delhivery ? (
-                    <p className="text-xs text-muted">Set SHIPROCKET_* or DELHIVERY_* in server .env for AWB generation.</p>
+                  {!courierStatus.delhivery ? (
+                    <p className="text-xs text-muted">Set DELHIVERY_API_TOKEN in server .env for AWB generation.</p>
                   ) : null}
                 </div>
                 {trackingLink ? (

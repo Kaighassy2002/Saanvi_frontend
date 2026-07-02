@@ -531,14 +531,8 @@ function AdminSettings() {
                 envHint="CLOUDINARY_CLOUD_NAME + API key/secret"
               />
               <IntegrationCard
-                name="Shiprocket"
-                description="AWB generation from order detail."
-                configured={integrations?.couriers?.shiprocket}
-                envHint="SHIPROCKET_EMAIL + SHIPROCKET_PASSWORD"
-              />
-              <IntegrationCard
                 name="Delhivery"
-                description="Alternative courier AWB generation."
+                description="Courier AWB generation from order detail."
                 configured={integrations?.couriers?.delhivery}
                 envHint="DELHIVERY_API_TOKEN"
               />
