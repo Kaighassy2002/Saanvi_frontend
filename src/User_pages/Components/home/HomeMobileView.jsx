@@ -11,9 +11,9 @@ import HomeMobileTrust from './HomeMobileTrust'
 function HomeMobileView() {
   return (
     <div className="home-mobile home-view--mobile">
+      <HomeMobileCategories />
       <HomeMobileHero />
       <HomeMobileServices />
-      <HomeMobileCategories />
       <HomeMobileTrending />
       <HomeMobilePromos />
       <HomeMobileBestSellers />
