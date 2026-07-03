@@ -1,8 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import {
-  getCloudinaryUploadParams,
-  uploadImageToCloudinary,
-} from '../services/cloudinaryUpload'
+import { uploadAdminImage } from '../services/cloudinaryUpload'
 import { productImageUrl } from '../../utils/cloudinaryImage'
 
 const MAX_BYTES = 5 * 1024 * 1024
@@ -59,15 +56,7 @@ export default function AdminSingleImageUpload({
       setUploading(true)
       setError('')
       try {
-        const params = await getCloudinaryUploadParams(authFetch, purpose)
-        const result = await uploadImageToCloudinary(file, {
-          cloudName: params.cloudName,
-          apiKey: params.apiKey,
-          signature: params.signature,
-          timestamp: params.timestamp,
-          folder: params.folder,
-          transformation: params.transformation,
-        })
+        const result = await uploadAdminImage(file, { purpose })
         onChange(result.secureUrl)
       } catch (err) {
         setError(err?.message || 'Upload failed')
@@ -75,7 +64,7 @@ export default function AdminSingleImageUpload({
         setUploading(false)
       }
     },
-    [authFetch, onChange, purpose]
+    [onChange, purpose]
   )
 
   const onPick = (e) => {

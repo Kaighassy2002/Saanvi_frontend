@@ -1,8 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import {
-  getCloudinaryUploadParams,
-  uploadImageToCloudinary,
-} from '../services/cloudinaryUpload'
+import { uploadAdminImage } from '../services/cloudinaryUpload'
 import { productImageUrl } from '../../utils/cloudinaryImage'
 
 const DEFAULT_MAX_IMAGES = 10
@@ -67,17 +64,12 @@ export default function ProductImageUpload({
   const uploadOne = useCallback(
     async (tempId, file) => {
       try {
-        const params = await getCloudinaryUploadParams(authFetch)
         setConfigError('')
-        const result = await uploadImageToCloudinary(file, {
-          cloudName: params.cloudName,
-          apiKey: params.apiKey,
-          signature: params.signature,
-          timestamp: params.timestamp,
-          folder: params.folder,
-          transformation: params.transformation,
-        }, (percent) => {
-          updatePending(tempId, { progress: percent })
+        const result = await uploadAdminImage(file, {
+          purpose: 'product',
+          onProgress: (percent) => {
+            updatePending(tempId, { progress: percent })
+          },
         })
         onChange((prev) => [...prev, { url: result.secureUrl, alt: '' }])
         removePending(tempId)
@@ -89,7 +81,7 @@ export default function ProductImageUpload({
         updatePending(tempId, { status: 'error', error: message, progress: 0 })
       }
     },
-    [authFetch, onChange, removePending, updatePending]
+    [onChange, removePending, updatePending]
   )
 
   const processFiles = useCallback(

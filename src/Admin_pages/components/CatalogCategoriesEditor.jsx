@@ -40,7 +40,7 @@ function CategoryFormFields({ form, setForm, authFetch, onSubmit, onCancel, savi
         authFetch={authFetch}
         purpose="category"
         label="Home category image"
-        hint="Shown on the home page category grid. Uploads to Home/Jewellery/categories."
+        hint="Shown on the home page category grid. Uploads to Jewellery/Home."
       />
       <textarea
         className={inputClass}
@@ -246,7 +246,7 @@ function CatalogCategoriesEditor({
         </p>
         <p className="mt-1 text-[11px] text-muted">
           Images upload to Cloudinary:{' '}
-          <span className="font-mono">Home/Jewellery/categories</span>
+          <span className="font-mono">Jewellery/Home</span>
         </p>
       </div>
 

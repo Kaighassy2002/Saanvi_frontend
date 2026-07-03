@@ -99,7 +99,7 @@ function PromoBannersEditor({ banners, onChange, authFetch, usingDefaults }) {
             : `${banners.length} banner${banners.length === 1 ? '' : 's'} saved.`}
         </p>
         <p className="mt-1 text-[11px] text-muted">
-          Images upload to Cloudinary: <span className="font-mono">Home/Jewellery/promo</span>
+          Images upload to Cloudinary: <span className="font-mono">Jewellery/Home</span>
         </p>
       </div>
 

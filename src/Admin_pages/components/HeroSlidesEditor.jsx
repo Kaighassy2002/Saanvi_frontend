@@ -102,7 +102,7 @@ function HeroSlidesEditor({ slides, onChange, authFetch, usingDefaults }) {
         </p>
         <p className="mt-1 text-[11px] text-muted">
           Images upload to Cloudinary:{' '}
-          <span className="font-mono">Home/Jewellery/hero</span>
+          <span className="font-mono">Jewellery/Home</span>
         </p>
       </div>
 
