@@ -226,11 +226,24 @@
   background: var(--color-surface-warm);
 }
 
-/* Services — horizontal cards */
+/* Services — horizontal cards below hero */
 .home-mobile-services {
-  padding: 0.85rem 0;
-  background: linear-gradient(180deg, var(--color-parchment), var(--color-surface-elevated));
+  padding: 0.85rem 0 0.75rem;
+  background: var(--color-cream);
   border-bottom: 1px solid var(--color-border-light);
+}
+
+.home-mobile-hero + .home-mobile-services {
+  margin-top: -0.35rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-light);
+  border-radius: 1.15rem 1.15rem 0 0;
+  box-shadow: 0 -8px 24px -18px rgba(58, 21, 29, 0.35);
+}
+
+.home-mobile-hero + .home-mobile-services .home-mobile-scroll {
+  mask-image: none;
+  padding-bottom: 0.35rem;
 }
 
 .home-mobile-service-card {
@@ -239,11 +252,12 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  min-width: 9.5rem;
-  padding: 0.65rem 0.85rem;
-  border-radius: 0.65rem;
+  min-width: min(72vw, 11.5rem);
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.75rem;
   border: 1px solid var(--color-border-light);
   background: var(--color-surface-elevated);
+  box-shadow: 0 6px 16px -12px rgba(58, 21, 29, 0.35);
 }
 
 .home-mobile-service-card i {
@@ -272,22 +286,25 @@
 }
 
 .home-mobile-section--categories {
-  padding-top: 1.15rem;
-  padding-bottom: 0.25rem;
-  background: var(--color-cream);
-  border-bottom: 1px solid var(--color-border-light);
+  padding: 0.85rem 0 0.35rem;
+  background: var(--color-surface);
+  border-bottom: none;
 }
 
-.home-mobile > .home-mobile-section--categories:first-child {
+.home-mobile-services + .home-mobile-section--categories {
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--color-border-light);
+  background: linear-gradient(180deg, var(--color-cream) 0%, var(--color-surface) 100%);
+}
+
+.home-mobile-section--categories + .home-mobile-section--new-arrivals {
   padding-top: 0.85rem;
-  padding-bottom: 0.15rem;
-  background: var(--color-cream);
+  border-top: 1px solid var(--color-border-light);
 }
 
 .home-mobile-section--new-arrivals {
   padding-top: 1.25rem;
   background: linear-gradient(180deg, var(--color-parchment) 0%, var(--color-surface) 100%);
-  border-top: 1px solid var(--color-border-light);
 }
 
 .home-mobile-section--featured {
@@ -687,12 +704,20 @@
 
 .home-mobile-cat-rail-wrap::before {
   left: 0;
-  background: linear-gradient(90deg, var(--color-cream) 15%, transparent);
+  background: linear-gradient(90deg, var(--color-surface) 15%, transparent);
 }
 
 .home-mobile-cat-rail-wrap::after {
   right: 0;
-  background: linear-gradient(270deg, var(--color-cream) 15%, transparent);
+  background: linear-gradient(270deg, var(--color-surface) 15%, transparent);
+}
+
+.home-mobile-services + .home-mobile-section--categories .home-mobile-cat-rail-wrap::before {
+  background: linear-gradient(90deg, var(--color-cream) 15%, transparent);
+}
+
+.home-mobile-services + .home-mobile-section--categories .home-mobile-cat-rail-wrap::after {
+  background: linear-gradient(270deg, var(--color-surface) 15%, transparent);
 }
 
 /* Category rail — viewport-sized tiles (4 visible per screen) */
