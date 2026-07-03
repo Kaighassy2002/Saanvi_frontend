@@ -146,7 +146,7 @@ function SiteHeader({
   const renderDesktopIconActions = () => (
     <>
       <Link to="/wishlist" className="site-header__icon-btn" aria-label="Wishlist">
-        <i className="fa-regular fa-heart text-[0.95rem]" aria-hidden />
+        <i className="fa-solid fa-heart text-[0.95rem]" aria-hidden />
         {wishlistItemCount > 0 ? (
           <span className="site-header__badge">{wishlistItemCount > 99 ? '99+' : wishlistItemCount}</span>
         ) : null}

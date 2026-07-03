@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 import './index.css'
 import { initSentry } from './monitoring/sentry'
 import App from './App.jsx'
