@@ -198,7 +198,7 @@ function AdminSettings() {
                   className={INPUT_CLASS}
                   value={form.storeLocation}
                   onChange={(e) => setField('storeLocation', e.target.value)}
-                  placeholder="Chennai, India"
+                  placeholder="Kunnamkulam, Thrissur, Kerala – 680523"
                 />
               </SettingsField>
             </SettingsSection>
@@ -220,13 +220,13 @@ function AdminSettings() {
                     className={INPUT_CLASS}
                     value={form.supportPhone}
                     onChange={(e) => setField('supportPhone', e.target.value)}
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 7994 915068"
                   />
                 </SettingsField>
               </div>
               <SettingsField
                 label="WhatsApp number"
-                hint="Digits with country code, no + (e.g. 919876543210). Used for chat links site-wide."
+                hint="Digits with country code, no + (e.g. 917994915068). Used for chat links site-wide."
                 error={fieldErrors.whatsappPhone}
                 htmlFor="whatsapp"
               >
@@ -235,7 +235,7 @@ function AdminSettings() {
                   className={INPUT_CLASS}
                   value={form.whatsappPhone}
                   onChange={(e) => setField('whatsappPhone', e.target.value)}
-                  placeholder="919876543210"
+                  placeholder="917994915068"
                 />
               </SettingsField>
               <SettingsField label="Instagram URL" htmlFor="instagram">

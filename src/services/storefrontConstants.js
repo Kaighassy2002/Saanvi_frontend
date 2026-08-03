@@ -9,10 +9,10 @@ export const FREE_SHIPPING_THRESHOLD = DEFAULT_FREE_SHIPPING_THRESHOLD
 /** @deprecated Use useStoreSettings() */
 export const SHIPPING_FEE = DEFAULT_SHIPPING_FEE
 
-export const SUPPORT_EMAIL = 'info@aashmikadesigns.com'
-export const SUPPORT_PHONE = '+91 98765 43210'
+export const SUPPORT_EMAIL = 'aashmikadesigns@gmail.com'
+export const SUPPORT_PHONE = '+91 7994 915068'
 export const SUPPORT_PHONE_TEL = SUPPORT_PHONE.replace(/\s/g, '')
-export const STORE_LOCATION = 'Chennai, India'
+export const STORE_LOCATION = 'Kunnamkulam, Thrissur, Kerala – 680523'
 export const STORE_NAME = 'Aashmika Designs'
 
 /** Public storefront origin for canonical URLs and JSON-LD (no trailing slash). */
@@ -24,7 +24,7 @@ export const SITE_URL = String(import.meta.env.VITE_SITE_URL || 'https://www.aas
 /** Brand mark: jewellery_frontend/public/icon/Aashmika-logo.png */
 export const BRAND_LOGO_SRC = '/icon/Aashmika-logo.png'
 
-const DEFAULT_WHATSAPP_DIGITS = '919876543210'
+const DEFAULT_WHATSAPP_DIGITS = '917994915068'
 
 function digitsOnly(value) {
   return String(value || '').replace(/\D/g, '')

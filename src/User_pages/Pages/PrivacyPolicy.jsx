@@ -1,15 +1,19 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { usePageMeta } from '../../hooks/usePageMeta'
-import { STORE_NAME } from '../../services/storefrontConstants'
+import {
+  STORE_NAME,
+  STORE_LOCATION,
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  SUPPORT_PHONE_TEL,
+} from '../../services/storefrontConstants'
 import Breadcrumbs from '../Components/Breadcrumbs'
 import Footer from '../Components/Footer'
 import SiteHeader from '../Components/SiteHeader'
 
 const LAST_UPDATED = '22 May 2026'
-const CONTACT_EMAIL = 'privacy@aashmikadesigns.com'
-const SUPPORT_EMAIL = 'info@aashmikadesigns.com'
-const SUPPORT_PHONE = '+91 98765 43210'
+const CONTACT_EMAIL = SUPPORT_EMAIL
 
 const sections = [
   { id: 'introduction', title: 'Introduction' },
@@ -328,13 +332,13 @@ function PrivacyPolicy() {
                   </li>
                   <li className="flex items-start gap-3">
                     <i className="fa-solid fa-phone mt-1 text-gold" aria-hidden />
-                    <a href={`tel:${SUPPORT_PHONE.replace(/\s/g, '')}`} className="legal-link">
+                    <a href={`tel:${SUPPORT_PHONE_TEL}`} className="legal-link">
                       {SUPPORT_PHONE}
                     </a>
                   </li>
                   <li className="flex items-start gap-3">
                     <i className="fa-solid fa-location-dot mt-1 text-gold" aria-hidden />
-                    <span>Chennai, India</span>
+                    <span>{STORE_LOCATION}</span>
                   </li>
                 </ul>
                 <Link to="/collections" className="lux-button inline-flex text-sm">

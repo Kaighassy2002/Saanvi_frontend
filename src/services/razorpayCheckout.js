@@ -63,7 +63,7 @@ export async function payWithRazorpay({
     throw new Error('Online payment is not available. Choose Cash on Delivery or try later.')
   }
 
-  const rpOrder = await createRazorpayOrder({ items, total, couponCode })
+  const rpOrder = await createRazorpayOrder({ items, total, couponCode, shipping })
   const keyId = keyIdOverride || rpOrder.keyId || config.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || ''
   if (!keyId) {
     throw new Error('Payment gateway key is missing. Contact the store.')

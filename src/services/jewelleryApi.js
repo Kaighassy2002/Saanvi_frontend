@@ -1,5 +1,12 @@
 import { API_BASE } from './config'
 import { reportApiError } from '../monitoring/sentry'
+import {
+  csrfHeaders,
+  ensureCsrfToken,
+  setStoredCsrfToken,
+  clearStoredCsrfToken,
+  getStoredCsrfToken,
+} from './csrf'
 
 export class ApiError extends Error {
   constructor(message, status, data = null) {
@@ -13,14 +20,66 @@ export class ApiError extends Error {
   }
 }
 
+const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE'])
+
+let customerRefreshPromise = null
+let adminRefreshPromise = null
+
+async function refreshCustomerSession() {
+  if (!customerRefreshPromise) {
+    customerRefreshPromise = fetch(`${API_BASE}/api/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { Accept: 'application/json', ...csrfHeaders() },
+    })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}))
+        if (!res.ok) throw new ApiError(data?.message || 'Session expired', res.status, data)
+        if (data?.csrfToken) setStoredCsrfToken(data.csrfToken)
+        return data
+      })
+      .finally(() => {
+        customerRefreshPromise = null
+      })
+  }
+  return customerRefreshPromise
+}
+
+async function refreshAdminSession() {
+  if (!adminRefreshPromise) {
+    adminRefreshPromise = fetch(`${API_BASE}/api/admin/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { Accept: 'application/json', ...csrfHeaders() },
+    })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}))
+        if (!res.ok) throw new ApiError(data?.message || 'Session expired', res.status, data)
+        if (data?.csrfToken) setStoredCsrfToken(data.csrfToken)
+        return data
+      })
+      .finally(() => {
+        adminRefreshPromise = null
+      })
+  }
+  return adminRefreshPromise
+}
+
 /**
  * @param {string} path - e.g. /api/products
- * @param {{ method?: string, body?: object, auth?: 'customer' | 'admin' | false, silentAuth?: boolean }} options
+ * @param {{ method?: string, body?: object, auth?: 'customer' | 'admin' | false, silentAuth?: boolean, _retried?: boolean }} options
  */
 export async function jewelleryFetch(path, options = {}) {
-  const { method = 'GET', body, silentAuth = false } = options
+  const { method = 'GET', body, silentAuth = false, auth = false, _retried = false } = options
   const headers = { Accept: 'application/json' }
   if (body !== undefined) headers['Content-Type'] = 'application/json'
+
+  if (MUTATING.has(method.toUpperCase()) && path !== '/api/auth/csrf') {
+    if (!getStoredCsrfToken()) {
+      await ensureCsrfToken().catch(() => '')
+    }
+    Object.assign(headers, csrfHeaders())
+  }
 
   let res
   try {
@@ -35,6 +94,32 @@ export async function jewelleryFetch(path, options = {}) {
     throw error
   }
 
+  // Access token expired — rotate refresh once, then retry.
+  if (res.status === 401 && !_retried && !path.includes('/auth/refresh') && !path.includes('/auth/login')) {
+    try {
+      if (auth === 'admin' || path.startsWith('/api/admin/')) {
+        await refreshAdminSession()
+      } else if (auth === 'customer' || path.startsWith('/api/auth/') || path.startsWith('/api/orders')) {
+        await refreshCustomerSession()
+      } else {
+        throw new Error('no-refresh')
+      }
+      return jewelleryFetch(path, { ...options, _retried: true })
+    } catch {
+      /* fall through to normal 401 handling */
+    }
+  }
+
+  // CSRF token stale — refresh token and retry once.
+  if (res.status === 403 && !_retried && MUTATING.has(method.toUpperCase())) {
+    const textPeek = await res.clone().text()
+    if (/csrf/i.test(textPeek)) {
+      clearStoredCsrfToken()
+      await ensureCsrfToken().catch(() => '')
+      return jewelleryFetch(path, { ...options, _retried: true })
+    }
+  }
+
   const text = await res.text()
   let data = null
   if (text) {
@@ -43,6 +128,10 @@ export async function jewelleryFetch(path, options = {}) {
     } catch {
       data = text
     }
+  }
+
+  if (typeof data === 'object' && data?.csrfToken) {
+    setStoredCsrfToken(data.csrfToken)
   }
 
   if (!res.ok) {
@@ -167,7 +256,11 @@ export async function customerForgotPasswordReset(resetToken, newPassword) {
 }
 
 export async function customerLogout() {
-  return jewelleryFetch('/api/auth/logout', { method: 'POST', auth: false })
+  try {
+    return await jewelleryFetch('/api/auth/logout', { method: 'POST', auth: false })
+  } finally {
+    clearStoredCsrfToken()
+  }
 }
 
 // --- Storefront orders ---
@@ -250,7 +343,11 @@ export async function adminLoginRequest(email, password) {
 }
 
 export async function adminLogout() {
-  return jewelleryFetch('/api/admin/auth/logout', { method: 'POST', auth: false })
+  try {
+    return await jewelleryFetch('/api/admin/auth/logout', { method: 'POST', auth: false })
+  } finally {
+    clearStoredCsrfToken()
+  }
 }
 
 export async function adminFetch(path, options = {}) {
