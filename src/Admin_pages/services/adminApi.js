@@ -375,6 +375,11 @@ export async function getCollectionAnalytics(authFetch) {
 }
 
 
+export async function listCoupons(authFetch) {
+  const data = await authFetch('/api/admin/coupons')
+  return Array.isArray(data?.coupons) ? data.coupons : []
+}
+
 export async function createCoupon(authFetch, body) {
   return authFetch('/api/admin/coupons', { method: 'POST', body })
 }
