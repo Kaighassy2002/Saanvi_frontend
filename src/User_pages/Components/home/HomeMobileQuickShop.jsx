@@ -23,7 +23,7 @@ function HomeMobileQuickShop() {
         {chips.map((chip, index) => (
           <Link
             key={`chip-${index}-${chip.label}`}
-            to={chip.link || '/collections'}
+            to={chip.link || '/shop'}
             className={`home-mobile-chip${chip.highlight ? ' home-mobile-chip--gold' : ''}`}
           >
             {chip.highlight ? (

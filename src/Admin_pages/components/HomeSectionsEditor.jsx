@@ -54,7 +54,7 @@ function HomeSectionsEditor({ sections, onChange }) {
   const addChip = () => {
     const chips = [
       ...(sections.mobileQuickShop?.chips || []),
-      { label: '', link: '/collections', highlight: false },
+      { label: '', link: '/shop', highlight: false },
     ]
     patchNested('mobileQuickShop', 'chips', chips)
   }
@@ -67,23 +67,8 @@ function HomeSectionsEditor({ sections, onChange }) {
   return (
     <div className="space-y-4">
       <div className="rounded-xl border border-[#e8d5c0] bg-[#faf7f2] px-4 py-3 text-xs text-muted">
-        Edit section headings, buttons, and mobile copy. Use <code className="font-mono">{'{{threshold}}'}</code>{' '}
-        in the service bar strip for the free-shipping amount.
+        Edit section headings, buttons, and mobile copy for the home page.
       </div>
-
-      <SectionBlock title="Service bar (desktop)">
-        <Field
-          label="Top strip message"
-          hint="Desktop only — below the hero. Use an em dash (—) to split headline and accent, e.g. Celebrate Onam with handcrafted jewellery — Shop the festive edit. Supports {{threshold}}."
-        >
-          <input
-            className={inputClass}
-            value={sections.serviceBarStrip || ''}
-            placeholder={DEFAULT_HOME_SECTIONS.serviceBarStrip}
-            onChange={(e) => patch('serviceBarStrip', e.target.value)}
-          />
-        </Field>
-      </SectionBlock>
 
       <SectionBlock title="Promo banners (desktop headings)">
         <Field label="Overline">

@@ -2,7 +2,7 @@ import { applyHomeTemplate } from './homeMerchandising'
 
 export const DEFAULT_ANNOUNCEMENT_MESSAGE = 'Free shipping on orders above {{threshold}}'
 export const DEFAULT_ANNOUNCEMENT_LINK_LABEL = 'Shop now'
-export const DEFAULT_ANNOUNCEMENT_LINK_URL = '/collections'
+export const DEFAULT_ANNOUNCEMENT_LINK_URL = '/shop'
 
 /** Resolve storefront announcement bar from store settings (with legacy fallbacks). */
 export function resolveAnnouncementBar(settings = {}) {

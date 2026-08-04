@@ -341,7 +341,7 @@ function PrivacyPolicy() {
                     <span>{STORE_LOCATION}</span>
                   </li>
                 </ul>
-                <Link to="/collections" className="lux-button inline-flex text-sm">
+                <Link to="/shop" className="lux-button inline-flex text-sm">
                   Continue shopping
                 </Link>
               </div>

@@ -41,7 +41,7 @@ function HeroSlideForm({ slide, index, authFetch, onChange, onDone }) {
       />
       <input
         className={inputClass}
-        placeholder="Link (e.g. /collections?category=Earrings)"
+        placeholder="Link (e.g. /shop?category=Earrings)"
         value={slide.link || ''}
         onChange={(e) => update('link', e.target.value)}
       />

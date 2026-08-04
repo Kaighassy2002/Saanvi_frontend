@@ -4,7 +4,7 @@ import { useStoreSettings } from '../../context/storeSettingsContext'
 import { resolveAnnouncementBar } from '../../services/announcementBar'
 
 function AnnouncementLink({ to, className, children, isHero }) {
-  const href = String(to || '/collections').trim() || '/collections'
+  const href = String(to || '/shop').trim() || '/shop'
   const linkClass = `underline-offset-2 transition hover:underline ${
     isHero ? 'text-gold hover:text-[#fff4e6]' : 'text-gold hover:text-white'
   } ${className || ''}`.trim()

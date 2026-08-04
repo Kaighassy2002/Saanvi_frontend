@@ -244,7 +244,7 @@ function ProductReviews({ productId, reviewsState: externalState }) {
               <p className="font-playfair text-sm text-muted">
                 Purchase this product first, then return here to share your experience.
               </p>
-              <Link to="/collections" className="button-tertiary mt-4 inline-flex text-sm">
+              <Link to="/shop" className="button-tertiary mt-4 inline-flex text-sm">
                 Continue shopping
               </Link>
             </div>

@@ -40,7 +40,7 @@ function ProductRecommendations({ currentProduct }) {
   if (!related.length && !recentlyViewed.length) return null
 
   return (
-    <div className="section-container storefront-feed--compact border-t border-[#eadfc9] pt-8">
+    <div className="section-container storefront-feed--compact border-t border-border pt-8">
       <ProductRow title="You may also like" products={related} />
       <ProductRow title="Recently viewed" products={recentlyViewed} />
     </div>

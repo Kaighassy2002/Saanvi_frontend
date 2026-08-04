@@ -130,14 +130,14 @@ function Wishlist() {
             <p className="wishlist-page__empty-text">
               Tap the heart on any design while you browse — your saved pieces will appear here.
             </p>
-            <Link to="/collections" className="lux-button wishlist-page__empty-cta no-underline">
+            <Link to="/shop" className="lux-button wishlist-page__empty-cta no-underline">
               Explore collections
             </Link>
             <nav className="wishlist-page__quick-picks" aria-label="Quick links">
               <Link to="/" className="wishlist-page__chip no-underline">
                 New arrivals
               </Link>
-              <Link to="/collections" className="wishlist-page__chip no-underline">
+              <Link to="/shop" className="wishlist-page__chip no-underline">
                 All jewellery
               </Link>
             </nav>

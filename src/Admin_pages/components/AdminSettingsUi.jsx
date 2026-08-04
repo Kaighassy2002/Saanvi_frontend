@@ -27,35 +27,35 @@ export function SettingsField({ label, hint, error, children, htmlFor }) {
   )
 }
 
-export function IntegrationCard({ name, description, configured, detail, envHint }) {
+export function IntegrationCard({ name, configured, icon = 'fa-solid fa-plug' }) {
   return (
-    <div
-      className={`rounded-lg border px-4 py-3 flex flex-wrap items-start justify-between gap-3 ${
-        configured ? 'border-emerald-200 bg-emerald-50/50' : 'border-[#efe2d1] bg-[#faf7f2]'
+    <article
+      className={`admin-integration-card ${
+        configured ? 'admin-integration-card--connected' : 'admin-integration-card--idle'
       }`}
     >
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-medium text-ink">{name}</p>
-          <span
-            className={`rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${
-              configured ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-600'
-            }`}
-          >
-            {configured ? 'Connected' : 'Not configured'}
-          </span>
+      <div className="flex items-center gap-3">
+        <div
+          className={`admin-integration-card__icon ${
+            configured ? 'admin-integration-card__icon--on' : 'admin-integration-card__icon--off'
+          }`}
+          aria-hidden
+        >
+          <i className={icon} />
         </div>
-        <p className="text-xs text-muted mt-1">{description}</p>
-        {detail ? (
-          <p className="text-[11px] text-muted font-mono mt-1 break-all">{detail}</p>
-        ) : null}
-        {envHint && !configured ? (
-          <p className="text-[11px] text-muted mt-2">
-            Set <code className="bg-white/80 px-1 rounded">{envHint}</code> in backend .env
-          </p>
-        ) : null}
+        <p className="min-w-0 flex-1 truncate text-sm font-semibold text-ink">{name}</p>
+        <span
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${
+            configured ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200/80 text-stone-600'
+          }`}
+        >
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${configured ? 'bg-emerald-500' : 'bg-stone-400'}`}
+          />
+          {configured ? 'Connected' : 'Disconnected'}
+        </span>
       </div>
-    </div>
+    </article>
   )
 }
 

@@ -228,42 +228,47 @@
 
 /* Services — compact horizontal cards below hero */
 .home-mobile-services {
-  padding: 0.55rem 0 0.5rem;
-  background: var(--color-cream);
+  padding: 0.7rem 0 0.55rem;
+  background: var(--color-surface);
   border-bottom: 1px solid var(--color-border-light);
 }
 
 .home-mobile-hero + .home-mobile-services {
-  margin-top: -0.35rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--color-border-light);
-  border-radius: 1rem 1rem 0 0;
-  box-shadow: 0 -6px 18px -16px rgba(58, 21, 29, 0.3);
+  margin-top: 0;
+  padding-top: 0.75rem;
+  border-top: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .home-mobile-services .home-mobile-scroll {
-  gap: 0.4rem;
-  padding: 0 0.75rem 0.4rem;
+  gap: 0;
+  padding: 0 0.35rem 0.35rem;
   mask-image: none;
 }
 
 .home-mobile-hero + .home-mobile-services .home-mobile-scroll {
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.15rem;
 }
 
 .home-mobile-services .home-mobile-service-card {
-  flex: 0 0 calc((100vw - 1.5rem - 0.4rem) / 2.12);
+  flex: 0 0 calc((100vw - 0.7rem) / 2.35);
   min-width: 0;
-  max-width: 10.5rem;
+  max-width: 11rem;
   scroll-snap-align: start;
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.45rem 0.55rem;
-  border-radius: 0.55rem;
-  border: 1px solid var(--color-border-light);
-  background: var(--color-surface-elevated);
-  box-shadow: 0 3px 10px -8px rgba(58, 21, 29, 0.28);
+  padding: 0.4rem 0.65rem;
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid var(--color-border-light);
+  background: transparent;
+  box-shadow: none;
+}
+
+.home-mobile-services .home-mobile-service-card:last-child {
+  border-right: none;
 }
 
 .home-mobile-services .home-mobile-service-card i {
@@ -361,8 +366,8 @@
 
 .home-mobile-section__overline {
   margin: 0 0 0.2rem;
-  font-family: var(--font-playfair);
-  font-size: 0.6875rem;
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -504,18 +509,15 @@
 }
 
 .home-mobile-promo-card__badge {
-  display: inline-flex;
-  align-self: flex-start;
+  display: block;
   max-width: 100%;
-  padding: 0.18rem 0.45rem;
-  border-radius: 0.2rem;
-  background: var(--color-royal-700);
+  padding: 0;
   font-family: var(--font-sans);
-  font-size: 0.5625rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -523,10 +525,11 @@
 
 .home-mobile-promo-card__title {
   margin: 0;
-  font-family: var(--font-bodoni);
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-family: var(--font-playfair);
+  font-size: 1rem;
+  font-weight: 700;
   line-height: 1.2;
+  letter-spacing: -0.01em;
   color: var(--color-ink);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -538,17 +541,21 @@
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  margin-top: 0.1rem;
+  margin-top: 0.15rem;
+  width: fit-content;
   font-family: var(--font-sans);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-royal-700);
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
 }
 
 .home-mobile-promo-card__cta i {
-  font-size: 0.5rem;
+  display: none;
 }
 
 .home-mobile-promo-card__media {
@@ -617,12 +624,12 @@
 .home-mobile-trust__heading {
   margin: 0 0 0.75rem;
   padding: 0 1rem;
-  font-family: var(--font-playfair);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-gold-dark);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--color-ink);
 }
 
 .home-mobile-trust__card {

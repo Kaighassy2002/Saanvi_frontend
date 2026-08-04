@@ -97,7 +97,7 @@ function HomeTrendingProducts() {
         <div className="mt-10 border border-border bg-surface-warm p-10 text-center">
           <p className="text-helper text-center">No products to show yet.</p>
           <Link
-            to="/collections"
+            to="/shop"
             className="mt-4 inline-flex min-h-[44px] items-center bg-ink px-8 py-2.5 font-sans text-xs font-medium uppercase tracking-[0.14em] text-white transition hover:bg-royal-950"
           >
             Browse shop

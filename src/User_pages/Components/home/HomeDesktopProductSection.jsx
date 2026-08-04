@@ -4,7 +4,7 @@ import { getProductPrimaryImage } from '../../utils/productImages'
 import HomeMobileFeedProductCard from './HomeMobileFeedProductCard'
 import HomeDesktopSectionHeader from './HomeDesktopSectionHeader'
 
-const DESKTOP_GRID_LIMIT = 10
+const DESKTOP_GRID_LIMIT = 12
 
 function ProductSkeleton() {
   return (
@@ -53,7 +53,7 @@ function HomeDesktopProductSection({
 
         {loading ? (
           <div className="home-desktop-product-grid" aria-hidden="true">
-            {Array.from({ length: 5 }, (_, i) => (
+            {Array.from({ length: 6 }, (_, i) => (
               <ProductSkeleton key={i} />
             ))}
           </div>

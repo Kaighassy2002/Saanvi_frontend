@@ -29,7 +29,7 @@ function Category() {
             Browse by style to quickly reach the pieces that match your occasion and mood.
           </p>
         </div>
-        <Link to="/collections" className="button-tertiary">
+        <Link to="/shop" className="button-tertiary">
           Browse all products
         </Link>
       </div>

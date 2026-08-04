@@ -26,7 +26,7 @@ export async function searchProducts(query, limit = 6) {
     }
     const categories = [...categorySet].slice(0, 4).map((name) => ({
       name,
-      href: `/collections?category=${encodeURIComponent(name)}`,
+      href: `/shop?category=${encodeURIComponent(name)}`,
     }))
     return { products: matched, categories }
   }

@@ -370,10 +370,10 @@ export async function listSizeCharts(authFetch) {
   return Array.isArray(data?.sizeCharts) ? data.sizeCharts : []
 }
 
-export async function listCoupons(authFetch) {
-  const data = await authFetch('/api/admin/coupons')
-  return Array.isArray(data?.coupons) ? data.coupons : []
+export async function getCollectionAnalytics(authFetch) {
+  return authFetch('/api/admin/catalog/collections/analytics')
 }
+
 
 export async function createCoupon(authFetch, body) {
   return authFetch('/api/admin/coupons', { method: 'POST', body })

@@ -104,5 +104,5 @@ export function buildListingSearchParams(patch, currentParams) {
 
 export function listingParamsToHref(params) {
   const q = params.toString()
-  return q ? `/collections?${q}` : '/collections'
+  return q ? `/shop?${q}` : '/shop'
 }

@@ -48,7 +48,7 @@ function Cart() {
             </div>
             <h2 className="card-heading">Your cart is empty</h2>
             <p className="mt-2 px-4 text-helper">Explore our collections and add pieces you love.</p>
-            <Link to="/collections" className="lux-button mt-6 inline-flex">
+            <Link to="/shop" className="lux-button mt-6 inline-flex">
               Start shopping
             </Link>
           </div>
@@ -151,7 +151,7 @@ function Cart() {
                     </p>
                   </>
                 )}
-                <Link to="/collections" className="block text-center font-playfair text-sm text-muted hover:text-[#7a2c3a]">
+                <Link to="/shop" className="block text-center font-playfair text-sm text-muted hover:text-[#7a2c3a]">
                   Continue shopping
                 </Link>
                 <a

@@ -126,7 +126,7 @@ export default function OrderCard({
             Invoice
           </button>
           {(order.status || '') === 'Delivered' ? (
-            <Link to="/collections" className="order-card__btn order-card__btn--ghost">
+            <Link to="/shop" className="order-card__btn order-card__btn--ghost">
               Shop again
             </Link>
           ) : (

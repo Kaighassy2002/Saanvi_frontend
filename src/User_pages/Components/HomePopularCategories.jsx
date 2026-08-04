@@ -68,7 +68,7 @@ function HomePopularCategories() {
         {copy.buttonLabel ? (
           <div className="mt-12 text-center">
             <Link
-              to={copy.buttonLink || '/collections'}
+              to={copy.buttonLink || '/shop'}
               className="inline-flex min-h-[44px] items-center bg-ink px-10 py-3 font-sans text-xs font-medium uppercase tracking-[0.14em] text-white transition hover:bg-royal-950"
             >
               {copy.buttonLabel}

@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/icon/Aashmika-logo.png" />
     <link rel="apple-touch-icon" href="/icon/Aashmika-br-icon.png" />
+    <link rel="preload" href="/icon/Aashmika-logo.png" as="image" />
+    <link rel="stylesheet" href="/boot-loader.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Shop handcrafted jewellery at Aashmika Designs — necklaces, earrings, rings and more. COD and secure online payment. Ships across India." />
     <meta property="og:site_name" content="Aashmika Designs" />
@@ -16,8 +18,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <title>Aashmika Designs</title>
   </head>
-  <body>
+  <body class="app-boot-loading">
+    <div
+      id="app-boot-loader"
+      class="app-boot-loader"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Loading Aashmika Designs"
+    >
+      <div class="app-boot-loader__inner">
+        <img
+          class="app-boot-loader__logo"
+          src="/icon/Aashmika-logo.png"
+          alt="Aashmika Designs"
+          width="200"
+          height="64"
+          decoding="async"
+          fetchpriority="high"
+        />
+        <div class="app-boot-loader__spinner" aria-hidden="true"></div>
+      </div>
+    </div>
     <div id="root"></div>
+    <script>
+      /* Failsafe: never leave visitors stuck on the splash */
+      window.setTimeout(function () {
+        var el = document.getElementById('app-boot-loader')
+        if (!el || el.dataset.hiding === '1') return
+        el.dataset.hiding = '1'
+        el.classList.add('app-boot-loader--hide')
+        el.setAttribute('aria-busy', 'false')
+        document.body.classList.remove('app-boot-loading')
+        window.setTimeout(function () {
+          if (el.parentNode) el.remove()
+        }, 650)
+      }, 8000)
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

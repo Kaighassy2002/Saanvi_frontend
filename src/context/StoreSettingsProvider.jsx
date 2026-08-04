@@ -18,7 +18,7 @@ function localDemoSettings() {
       tag: tag || '',
       title: title || '',
       subtitle: subtitle || '',
-      link: link || '/collections',
+      link: link || '/shop',
     })),
     featuredProductIds: [],
     promoBanners: HOME_PROMO_BANNERS,

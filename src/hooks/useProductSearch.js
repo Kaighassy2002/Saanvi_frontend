@@ -29,12 +29,12 @@ export function useProductSearch(products, query) {
     const categories = [...categorySet]
       .filter((name) => name.toLowerCase().includes(q) || q.length >= 2)
       .slice(0, MAX_CATEGORIES)
-      .map((name) => ({ name, href: `/collections?category=${encodeURIComponent(name)}` }))
+      .map((name) => ({ name, href: `/shop?category=${encodeURIComponent(name)}` }))
 
     const extraCategories = [...categorySet]
       .filter((c) => !categories.some((x) => x.name === c))
       .slice(0, MAX_CATEGORIES - categories.length)
-      .map((name) => ({ name, href: `/collections?category=${encodeURIComponent(name)}` }))
+      .map((name) => ({ name, href: `/shop?category=${encodeURIComponent(name)}` }))
 
     return {
       products: matchedProducts,

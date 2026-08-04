@@ -22,7 +22,7 @@ function serviceHasContent(service) {
 }
 
 const EMPTY_HERO_SLIDE = { image: '', tag: '', title: '', subtitle: '', link: '' }
-const EMPTY_PROMO_BANNER = { label: '', title: '', image: '', link: '/collections', buttonText: 'Shop now' }
+const EMPTY_PROMO_BANNER = { label: '', title: '', image: '', link: '/shop', buttonText: 'Shop now' }
 const EMPTY_HOME_SERVICE = { icon: 'fa-paper-plane', title: '', text: '' }
 
 export function applyHomeTemplate(str, { freeShippingThreshold } = {}) {
@@ -38,7 +38,7 @@ export function getDefaultHeroSlidesForAdmin() {
     tag: slide.tag || '',
     title: slide.title || '',
     subtitle: slide.subtitle || '',
-    link: slide.link || '/collections',
+    link: slide.link || '/shop',
   }))
 }
 
@@ -47,7 +47,7 @@ export function getDefaultPromoBannersForAdmin() {
     label: banner.label || '',
     title: banner.title || '',
     image: banner.image || '',
-    link: banner.link || '/collections',
+    link: banner.link || '/shop',
     buttonText: banner.buttonText || 'Shop now',
   }))
 }
@@ -69,7 +69,7 @@ export function normalizeAdminHeroSlides(apiSlides) {
       tag: String(slide.tag || '').trim(),
       title: String(slide.title || '').trim(),
       subtitle: String(slide.subtitle || '').trim(),
-      link: String(slide.link || '').trim() || '/collections',
+      link: String(slide.link || '').trim() || '/shop',
     }))
   }
   return getDefaultHeroSlidesForAdmin()
@@ -82,7 +82,7 @@ export function normalizeAdminPromoBanners(apiBanners) {
       label: String(banner.label || '').trim(),
       title: String(banner.title || '').trim(),
       image: String(banner.image || '').trim(),
-      link: String(banner.link || '').trim() || '/collections',
+      link: String(banner.link || '').trim() || '/shop',
       buttonText: String(banner.buttonText || '').trim() || 'Shop now',
     }))
   }
@@ -121,7 +121,7 @@ export function normalizeAdminHomeSections(apiSections) {
     ? src.mobileQuickShop.chips
         .map((c) => ({
           label: String(c?.label || '').trim(),
-          link: String(c?.link || '').trim() || '/collections',
+          link: String(c?.link || '').trim() || '/shop',
           highlight: !!c?.highlight,
         }))
         .filter((c) => c.label)
@@ -161,7 +161,7 @@ export function resolveHeroSlides(apiSlides, fallbackSlides = HOME_HERO_SLIDES) 
     title: String(slide.title || '').trim(),
     subtitle: String(slide.subtitle || '').trim(),
     image: String(slide.image || '').trim(),
-    link: String(slide.link || '/collections').trim() || '/collections',
+    link: String(slide.link || '/shop').trim() || '/shop',
   }))
 }
 
@@ -173,7 +173,7 @@ export function resolvePromoBanners(apiBanners, fallbackBanners = HOME_PROMO_BAN
     label: String(banner.label || '').trim(),
     title: String(banner.title || '').trim(),
     image: String(banner.image || '').trim(),
-    link: String(banner.link || '/collections').trim() || '/collections',
+    link: String(banner.link || '/shop').trim() || '/shop',
     buttonText: String(banner.buttonText || 'Shop now').trim() || 'Shop now',
   }))
 }
@@ -212,13 +212,13 @@ export function resolveFeaturedProducts(products, featuredIds, limit = 10) {
 }
 
 export function trendingViewAllHref(activeTab) {
-  if (activeTab === 'new') return '/collections?sort=latest'
-  if (activeTab === 'bestseller') return '/collections?sort=discount'
-  return '/collections'
+  if (activeTab === 'new') return '/shop?sort=latest'
+  if (activeTab === 'bestseller') return '/shop?sort=discount'
+  return '/shop'
 }
 
 export function mobileTrendingViewAllHref(activeTab) {
-  if (activeTab === 'new') return '/collections?sort=latest'
-  if (activeTab === 'bestseller') return '/collections?sort=price-high'
-  return '/collections'
+  if (activeTab === 'new') return '/shop?sort=latest'
+  if (activeTab === 'bestseller') return '/shop?sort=price-high'
+  return '/shop'
 }

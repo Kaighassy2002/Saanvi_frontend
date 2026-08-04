@@ -148,7 +148,7 @@ function Contact() {
                 </Link>
               </div>
             </div>
-            <Link to="/collections" className="lux-button shrink-0 text-sm py-2.5 px-6">
+            <Link to="/shop" className="lux-button shrink-0 text-sm py-2.5 px-6">
               Continue shopping
             </Link>
           </div>

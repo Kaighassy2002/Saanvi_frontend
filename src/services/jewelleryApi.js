@@ -155,6 +155,27 @@ export async function fetchStoreSettings() {
   return jewelleryFetch('/api/store-settings')
 }
 
+// --- Public curated collections ---
+
+export async function fetchPublicCollections(params = {}) {
+  const q = new URLSearchParams()
+  if (params.q) q.set('q', params.q)
+  const suffix = q.toString() ? `?${q}` : ''
+  const data = await jewelleryFetch(`/api/collections${suffix}`)
+  return Array.isArray(data?.collections) ? data.collections : []
+}
+
+export async function fetchFeaturedCollections() {
+  const data = await jewelleryFetch('/api/collections/featured')
+  const rows = Array.isArray(data?.collections) ? data.collections : []
+  return rows.slice(0, 3)
+}
+
+export async function fetchPublicCollectionBySlug(slug) {
+  const data = await jewelleryFetch(`/api/collections/${encodeURIComponent(slug)}`)
+  return data?.collection || null
+}
+
 export async function fetchBackendCategories() {
   const data = await jewelleryFetch('/api/categories')
   return Array.isArray(data?.categories) ? data.categories : []

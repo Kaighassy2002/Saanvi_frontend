@@ -108,7 +108,7 @@ function HomeMobileDiscover() {
         overline={copy.overline || 'Handpicked for you'}
         title={copy.title || 'Discover more'}
         linkLabel={copy.linkLabel || 'View all'}
-        linkHref={copy.linkUrl || '/collections'}
+        linkHref={copy.linkUrl || '/shop'}
       />
 
       {loading ? (
@@ -133,7 +133,7 @@ function HomeMobileDiscover() {
           </div>
 
           <div className="home-mobile-section__cta-wrap">
-            <Link to={copy.linkUrl || '/collections'} className="home-mobile-section__cta">
+            <Link to={copy.linkUrl || '/shop'} className="home-mobile-section__cta">
               {copy.ctaLabel || 'Browse all jewellery'}
               <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden />
             </Link>

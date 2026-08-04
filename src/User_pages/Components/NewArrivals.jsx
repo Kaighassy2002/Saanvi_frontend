@@ -29,7 +29,7 @@ function NewArrivals() {
             Newly added pieces curated for festive styling and everyday elegance.
           </p>
         </div>
-        <Link to="/collections" className="button-tertiary">
+        <Link to="/shop" className="button-tertiary">
           View all collections
         </Link>
       </div>

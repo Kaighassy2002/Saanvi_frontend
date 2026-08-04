@@ -1,0 +1,117 @@
+/* Instant boot splash — loaded from index.html before the JS bundle */
+
+.app-boot-loading {
+  overflow: hidden;
+}
+
+.app-boot-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(247, 236, 238, 0.9) 0%, transparent 55%),
+    radial-gradient(circle at 85% 90%, rgba(201, 163, 74, 0.08) 0%, transparent 40%),
+    linear-gradient(165deg, #fffdf9 0%, #f8f1e6 48%, #f2e7d8 100%);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.55s step-end;
+  pointer-events: all;
+}
+
+.app-boot-loader--hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.55s step-end;
+}
+
+.app-boot-loader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 1.5rem;
+  animation: app-boot-fade-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-boot-loader__logo {
+  display: block;
+  width: min(200px, 52vw);
+  height: auto;
+  object-fit: contain;
+  animation: app-boot-logo-breathe 2.4s ease-in-out infinite;
+}
+
+.app-boot-loader__spinner {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+}
+
+.app-boot-loader__spinner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(201, 163, 74, 0.22);
+}
+
+.app-boot-loader__spinner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-top-color: #c9a34a;
+  border-right-color: #9f7a2c;
+  animation: app-boot-spin 0.9s linear infinite;
+}
+
+@keyframes app-boot-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes app-boot-logo-breathe {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.015);
+  }
+}
+
+@keyframes app-boot-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-boot-loader__inner,
+  .app-boot-loader__logo,
+  .app-boot-loader__spinner::after {
+    animation: none;
+  }
+
+  .app-boot-loader,
+  .app-boot-loader--hide {
+    transition-duration: 0.01ms;
+  }
+}

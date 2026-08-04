@@ -32,6 +32,7 @@ export const defaultStoreSettings = {
   freeShippingThreshold: DEFAULT_FREE_SHIPPING_THRESHOLD,
   heroSlides: [],
   featuredProductIds: [],
+  featuredCollectionIds: [],
   homeCategoryImages: [],
   promoBanners: [],
   homeServices: [],

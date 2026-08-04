@@ -1,5 +1,6 @@
 import React from 'react'
 import { captureException } from '../monitoring/sentry'
+import { hideBootLoader } from './AppBootLoader'
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -13,6 +14,7 @@ export default class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, info) {
     console.error('App error boundary:', error, info)
+    hideBootLoader()
     captureException(error, {
       contexts: { react: { componentStack: info.componentStack } },
       tags: { source: 'error-boundary' },

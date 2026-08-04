@@ -152,15 +152,81 @@
   }
 
   .lux-card {
-    @apply rounded-2xl border border-[#e3d1b4] bg-white/90 shadow-[0_18px_38px_-28px_rgba(58,21,29,0.5)] backdrop-blur;
+    border-radius: 1rem;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 18px 38px -28px rgba(58, 21, 29, 0.5);
+    backdrop-filter: blur(8px);
   }
 
   .lux-button {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-[#f0d79e] bg-[linear-gradient(135deg,#f3d894_0%,#d8b160_45%,#b98e37_100%)] px-6 py-3 font-sans text-sm font-medium uppercase tracking-[0.14em] text-[#241714] shadow-[0_16px_30px_-18px_rgba(201,163,74,0.9)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 hover:shadow-[0_22px_36px_-18px_rgba(201,163,74,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a2c3a]/35 sm:text-base;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-gold-light);
+    background: linear-gradient(135deg, #f3d894 0%, #d8b160 45%, #b98e37 100%);
+    padding: 0.75rem 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    box-shadow: 0 16px 30px -18px rgba(201, 163, 74, 0.9);
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .lux-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow: 0 22px 36px -18px rgba(201, 163, 74, 0.95);
+  }
+
+  .lux-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px rgba(122, 44, 58, 0.35);
+  }
+
+  @media (min-width: 640px) {
+    .lux-button {
+      font-size: 1rem;
+    }
   }
 
   .lux-button-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-[#d9c19a] bg-white/10 px-6 py-3 font-sans text-sm font-medium uppercase tracking-[0.12em] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-sm transition duration-300 hover:-translate-y-0.5 hover:border-[#7a2c3a] hover:bg-white/90 hover:text-[#7a2c3a] hover:shadow-[0_18px_34px_-22px_rgba(58,21,29,0.68)] sm:text-base;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-beige-dark);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .lux-button-outline:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-royal-700);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--color-royal-700);
+    box-shadow: 0 18px 34px -22px rgba(58, 21, 29, 0.68);
+  }
+
+  @media (min-width: 640px) {
+    .lux-button-outline {
+      font-size: 1rem;
+    }
   }
 
   .add-to-bag-btn {
@@ -169,7 +235,7 @@
     justify-content: center;
     gap: 0.45rem;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 0.65rem;
     background: var(--color-royal-700);
     font-family: var(--font-sans);
     font-size: 0.8125rem;
@@ -223,7 +289,7 @@
   }
 
   .text-kicker {
-    @apply font-playfair text-xs uppercase tracking-[0.16em] text-[#8b6a42] sm:text-sm;
+    @apply font-playfair text-xs uppercase tracking-[0.16em] text-gold-dark sm:text-sm;
   }
 
   .text-helper {
@@ -239,7 +305,7 @@
   }
 
   .button-tertiary {
-    @apply inline-flex items-center justify-center rounded-full border border-[#d6c0a2] px-5 py-2.5 font-sans text-sm font-medium tracking-wide text-muted transition-colors hover:border-[#7a2c3a] hover:bg-[#f7ecee] hover:text-[#7a2c3a] sm:text-base;
+    @apply inline-flex items-center justify-center rounded-full border border-beige-dark px-5 py-2.5 font-sans text-sm font-medium tracking-wide text-muted transition-colors hover:border-royal-700 hover:bg-royal-100 hover:text-royal-700 sm:text-base;
   }
 
   .form-label {
@@ -259,7 +325,7 @@
   }
 
   .royal-input {
-    @apply w-full rounded-xl border border-[#d8c4a7] bg-[#fffaf3] px-4 py-2.5 text-sm text-ink outline-none transition focus:border-[#7a2c3a] focus:ring-2 focus:ring-[#7a2c3a]/20 sm:text-base;
+    @apply w-full rounded-xl border border-beige-dark bg-cream px-4 py-2.5 text-sm text-ink outline-none transition focus:border-royal-700 focus:ring-2 focus:ring-royal-700/20 sm:text-base;
   }
 
   /* Admin typography — DM Sans throughout (standard dashboard UI) */
@@ -381,6 +447,34 @@
 
   .admin-panel {
     @apply rounded-xl border border-[#e8d5c0] bg-white p-5 shadow-[0_2px_12px_-4px_rgba(58,21,29,0.12)];
+  }
+
+  .admin-integration-card {
+    @apply rounded-xl border bg-white px-4 py-3.5 shadow-[0_2px_12px_-6px_rgba(58,21,29,0.2)] transition duration-200;
+  }
+
+  .admin-integration-card:hover {
+    @apply border-[#d8c4a7] shadow-[0_8px_20px_-14px_rgba(58,21,29,0.3)];
+  }
+
+  .admin-integration-card--connected {
+    @apply border-emerald-200/90 bg-[#fbfefc];
+  }
+
+  .admin-integration-card--idle {
+    @apply border-[#efe2d1] bg-[#fffdf9];
+  }
+
+  .admin-integration-card__icon {
+    @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border text-sm;
+  }
+
+  .admin-integration-card__icon--on {
+    @apply border-emerald-200 bg-emerald-50 text-emerald-700;
+  }
+
+  .admin-integration-card__icon--off {
+    @apply border-[#efe2d1] bg-[#f8f1e6] text-[#9f7a2c];
   }
 
   .admin-panel-header {

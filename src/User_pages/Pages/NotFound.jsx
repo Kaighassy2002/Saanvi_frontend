@@ -20,7 +20,7 @@ function NotFound() {
           <Link to="/" className="lux-button px-6 py-2.5 text-sm">
             Back to home
           </Link>
-          <Link to="/collections" className="lux-button-outline px-6 py-2.5 text-sm">
+          <Link to="/shop" className="lux-button-outline px-6 py-2.5 text-sm">
             Browse collections
           </Link>
         </div>

@@ -12,9 +12,9 @@ import HomePromoBanners from '../HomePromoBanners'
 import HomeDesktopCategories from './HomeDesktopCategories'
 import HomeDesktopProductSection from './HomeDesktopProductSection'
 import HomeDesktopDiscover from './HomeDesktopDiscover'
-import HomeDesktopTrust from './HomeDesktopTrust'
+import HomeFeaturedCollections from './HomeFeaturedCollections'
 
-const SECTION_LIMIT = 10
+const SECTION_LIMIT = 12
 
 function HomeDesktopView() {
   const { homeSections } = useHomeContent()
@@ -53,6 +53,7 @@ function HomeDesktopView() {
       <HomeHeroSlider />
       <HomeServiceBar />
       <HomeDesktopCategories />
+      <HomeFeaturedCollections />
       <HomeDesktopProductSection
         sectionClass="home-desktop-section--new-arrivals"
         ariaLabel="New arrivals"
@@ -97,7 +98,6 @@ function HomeDesktopView() {
         onToggleWishlist={toggle}
       />
       <HomeDesktopDiscover />
-      <HomeDesktopTrust />
     </div>
   )
 }

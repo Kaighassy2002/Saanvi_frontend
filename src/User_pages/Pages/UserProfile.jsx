@@ -383,7 +383,7 @@ function UserProfile() {
               <i className="fa-solid fa-bag-shopping text-xs" aria-hidden />
               Orders
             </Link>
-            <Link to="/collections" className="account-page__hero-link">
+            <Link to="/shop" className="account-page__hero-link">
               <i className="fa-solid fa-gem text-xs" aria-hidden />
               Shop
             </Link>

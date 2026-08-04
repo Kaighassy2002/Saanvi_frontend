@@ -66,7 +66,7 @@ function CartDrawer({ open, onClose }) {
           {items.length === 0 ? (
             <div className="py-12 text-center">
               <p className="text-helper">Your bag is empty.</p>
-              <Link to="/collections" onClick={onClose} className="lux-button mt-4 inline-flex text-sm">
+              <Link to="/shop" onClick={onClose} className="lux-button mt-4 inline-flex text-sm">
                 Start shopping
               </Link>
             </div>

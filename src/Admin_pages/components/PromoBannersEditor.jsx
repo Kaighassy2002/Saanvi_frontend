@@ -33,7 +33,7 @@ function PromoBannerForm({ banner, index, authFetch, onChange, onDone }) {
       />
       <input
         className={inputClass}
-        placeholder="Link (e.g. /collections?category=Ring)"
+        placeholder="Link (e.g. /shop?category=Ring)"
         value={banner.link || ''}
         onChange={(e) => update('link', e.target.value)}
       />

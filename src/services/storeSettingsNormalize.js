@@ -33,6 +33,9 @@ export function normalizeStoreSettings(data) {
   const featuredProductIds = Array.isArray(data?.featuredProductIds)
     ? data.featuredProductIds.map(String).filter(Boolean)
     : []
+  const featuredCollectionIds = Array.isArray(data?.featuredCollectionIds)
+    ? data.featuredCollectionIds.map(String).filter(Boolean).slice(0, 3)
+    : []
   const homeCategoryImages = Array.isArray(data?.homeCategoryImages) ? data.homeCategoryImages : []
   const promoBanners = Array.isArray(data?.promoBanners) ? data.promoBanners : []
   const homeServices = Array.isArray(data?.homeServices) ? data.homeServices : []
@@ -56,6 +59,7 @@ export function normalizeStoreSettings(data) {
         : DEFAULT_FREE_SHIPPING_THRESHOLD,
     heroSlides,
     featuredProductIds,
+    featuredCollectionIds,
     homeCategoryImages,
     promoBanners,
     homeServices,

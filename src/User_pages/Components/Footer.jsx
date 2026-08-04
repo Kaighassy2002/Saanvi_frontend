@@ -75,17 +75,17 @@ function Footer() {
           <h3 className="font-bodoni text-lg tracking-[0.06em] text-gold">Shop</h3>
           <ul className="mt-4 space-y-2.5 text-sm text-beige-dark">
             <li>
-              <Link to="/collections" className="transition hover:text-gold">
-                All collections
+              <Link to="/shop" className="transition hover:text-gold">
+                All jewellery
               </Link>
             </li>
             <li>
-              <Link to="/collections?category=Bridal%20Set" className="transition hover:text-gold">
+              <Link to="/shop?category=Bridal%20Set" className="transition hover:text-gold">
                 Bridal sets
               </Link>
             </li>
             <li>
-              <Link to="/collections?category=Necklace" className="transition hover:text-gold">
+              <Link to="/shop?category=Necklace" className="transition hover:text-gold">
                 Necklaces
               </Link>
             </li>

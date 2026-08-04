@@ -114,7 +114,7 @@ function SiteHeader({
       pushRecentSearch(trimmed)
       setRecentSearches(getRecentSearches())
     }
-    navigate(trimmed ? `/collections?search=${encodeURIComponent(trimmed)}` : '/collections')
+    navigate(trimmed ? `/shop?search=${encodeURIComponent(trimmed)}` : '/shop')
     closeSearchUi()
   }
 
@@ -249,7 +249,7 @@ function SiteHeader({
                   </NavLink>
                 ))}
                 <div className="site-header__shop-wrap group/shop">
-                  <NavLink to="/collections" className={navLinkClass}>
+                  <NavLink to="/shop" className={navLinkClass}>
                     Shop
                   </NavLink>
                   <ShopMegaMenu variant="desktop" inHero={inHero} onNavigate={closeMenus} />
@@ -333,7 +333,7 @@ function SiteHeader({
                     </NavLink>
                   ))}
                   <NavLink
-                    to="/collections"
+                    to="/shop"
                     className={navLinkClass}
                     onClick={() => setIsMenuOpen(false)}
                   >

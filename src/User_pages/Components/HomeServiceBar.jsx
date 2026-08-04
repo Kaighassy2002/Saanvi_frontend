@@ -2,15 +2,13 @@ import React from 'react'
 import { useHomeContent } from '../../hooks/useHomeContent'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { formatFontAwesomeIcon } from '../../utils/fontAwesomeIcon'
-import ServiceBarStrip from './ServiceBarStrip'
 
 function HomeServiceBar() {
   const ref = useScrollReveal()
-  const { homeServices, serviceBarStrip } = useHomeContent()
+  const { homeServices } = useHomeContent()
 
   return (
     <section ref={ref} className="jewelsium-services section-reveal" aria-label="Store benefits">
-      <ServiceBarStrip text={serviceBarStrip} />
       <div className="jewelsium-services__cards section-container grid grid-cols-2 gap-4 py-6 sm:grid-cols-4 sm:gap-5 sm:py-8">
         {homeServices.map((item, index) => (
           <div key={`${item.title}-${index}`} className="jewelsium-service-card">

@@ -5,7 +5,7 @@ import { useWishlist } from '../../hooks/useWishlist'
 
 const navItems = [
   { to: '/', label: 'Home', icon: 'fa-house', end: true },
-  { to: '/collections', label: 'Shop', icon: 'fa-gem', end: false },
+  { to: '/shop', label: 'Shop', icon: 'fa-gem', end: false },
   { to: '/wishlist', label: 'Saved', icon: 'fa-heart', end: false },
   { to: '/cart', label: 'Cart', icon: 'fa-cart-shopping', end: false },
 ]

@@ -9,7 +9,7 @@ import HomeMobileFeedProductCard from './HomeMobileFeedProductCard'
 import HomeDesktopSectionHeader from './HomeDesktopSectionHeader'
 import { useScrollReveal } from '../../../hooks/useScrollReveal'
 
-const DISCOVER_LIMIT = 10
+const DISCOVER_LIMIT = 12
 
 function HomeDesktopDiscover() {
   const ref = useScrollReveal()
@@ -32,12 +32,12 @@ function HomeDesktopDiscover() {
           overline={copy.overline || 'Handpicked for you'}
           title={copy.title || 'Discover more'}
           linkLabel={copy.linkLabel || 'View all'}
-          linkHref={copy.linkUrl || '/collections'}
+          linkHref={copy.linkUrl || '/shop'}
         />
 
         {loading ? (
           <div className="home-desktop-product-grid" aria-hidden="true">
-            {Array.from({ length: 5 }, (_, i) => (
+            {Array.from({ length: 6 }, (_, i) => (
               <div key={i} className="home-mobile-feed-card">
                 <div className="jewelsium-skeleton home-mobile-feed-card__media" />
                 <div className="home-mobile-feed-card__body space-y-2">
@@ -69,7 +69,7 @@ function HomeDesktopDiscover() {
             </div>
 
             <div className="home-desktop-section__cta-wrap">
-              <Link to={copy.linkUrl || '/collections'} className="home-desktop-section__cta">
+              <Link to={copy.linkUrl || '/shop'} className="home-desktop-section__cta">
                 {copy.ctaLabel || 'Browse all jewellery'}
                 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden />
               </Link>

@@ -339,9 +339,9 @@ function ProductDetailView({ product, productId }) {
 
   const breadcrumbItems = [
     { label: 'Home', to: '/' },
-    { label: 'Collections', to: '/collections' },
+    { label: 'Shop', to: '/shop' },
     ...(view.category
-      ? [{ label: view.category, to: `/collections?category=${encodeURIComponent(view.category)}` }]
+      ? [{ label: view.category, to: `/shop?category=${encodeURIComponent(view.category)}` }]
       : []),
     {
       label: view.name.length > 48 ? `${view.name.slice(0, 48)}…` : view.name,
@@ -367,7 +367,7 @@ function ProductDetailView({ product, productId }) {
                   <div className="product-detail__header-top">
                     {view.category ? (
                       <Link
-                        to={`/collections?category=${encodeURIComponent(view.category)}`}
+                        to={`/shop?category=${encodeURIComponent(view.category)}`}
                         className="product-detail__category"
                       >
                         {view.category}
@@ -604,7 +604,7 @@ function ProductDetails() {
         <div className="section-container py-20 text-center">
           <h1 className="font-bodoni text-3xl text-ink">Product not found</h1>
           <p className="mt-2 text-muted">{error || 'This item may be unavailable.'}</p>
-          <Link to="/collections" className="lux-button mt-6 inline-flex">
+          <Link to="/shop" className="lux-button mt-6 inline-flex">
             Browse collections
           </Link>
         </div>

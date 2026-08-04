@@ -24,7 +24,7 @@ function HomePromoBanners() {
           overline={promoCopy.overline || 'Limited time'}
           title={mobilePromoCopy.title || promoCopy.title || 'Offers for you'}
           linkLabel={mobilePromoCopy.linkLabel || 'See all'}
-          linkHref={mobilePromoCopy.linkUrl || '/collections'}
+          linkHref={mobilePromoCopy.linkUrl || '/shop'}
         />
 
         <div className="home-desktop-promo-grid">

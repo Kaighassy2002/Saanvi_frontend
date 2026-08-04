@@ -294,7 +294,7 @@ function Order() {
             Your purchases will appear here with live tracking, per-item returns, and invoices.
           </p>
           <div className="orders-empty__actions">
-            <Link to="/collections" className="lux-button">
+            <Link to="/shop" className="lux-button">
               Explore collections
             </Link>
             {!USE_LOCAL_API && !isCustomerLoggedIn() ? (
@@ -368,7 +368,7 @@ function Order() {
             </p>
           </div>
           <div className="orders-page__header-actions">
-            <Link to="/collections" className="orders-page__header-link">
+            <Link to="/shop" className="orders-page__header-link">
               <i className="fa-solid fa-gem" aria-hidden />
               Continue shopping
             </Link>

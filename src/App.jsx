@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams, useSearchParams } from 'react-router-dom'
 import './App.css'
 import { AdminAuthProvider } from './context/AdminAuthProvider'
 import { CustomerAuthProvider } from './context/CustomerAuthProvider'
@@ -9,6 +9,7 @@ import CatalogProvider from './context/CatalogProvider'
 import { CartDrawerProvider } from './context/CartDrawerProvider'
 import { WishlistProvider } from './context/WishlistProvider'
 import ErrorBoundary from './components/ErrorBoundary'
+import AppBootLoader from './components/AppBootLoader'
 import Home from './User_pages/Pages/Home'
 import AdminLogin from './Admin_pages/AdminLogin'
 import AdminLayout from './Admin_pages/AdminLayout'
@@ -18,6 +19,7 @@ import SkipLink from './User_pages/Components/SkipLink'
 const Cart = lazy(() => import('./User_pages/Pages/Cart'))
 const ProductDetails = lazy(() => import('./User_pages/Pages/ProductDetails'))
 const ProductListing = lazy(() => import('./User_pages/Pages/ProductListing'))
+const CollectionDetail = lazy(() => import('./User_pages/Pages/CollectionDetail'))
 const CheckOut = lazy(() => import('./User_pages/Pages/CheckOut'))
 const Order = lazy(() => import('./User_pages/Pages/Order'))
 const UserProfile = lazy(() => import('./User_pages/Pages/UserProfile'))
@@ -53,6 +55,17 @@ function LegacyOrderRedirect() {
   return <Navigate to={`/orders?order=${encodeURIComponent(orderId || '')}`} replace />
 }
 
+/** Old /collections listing → home; shop query bookmarks → /shop */
+function LegacyCollectionsIndexRedirect() {
+  const [searchParams] = useSearchParams()
+  const shopKeys = ['category', 'search', 'sort', 'stock', 'min', 'max', 'color', 'material']
+  if (shopKeys.some((key) => searchParams.has(key))) {
+    const q = searchParams.toString()
+    return <Navigate to={q ? `/shop?${q}` : '/shop'} replace />
+  }
+  return <Navigate to="/" replace />
+}
+
 function PageFallback() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center gap-3 py-12 text-muted text-sm">
@@ -73,6 +86,7 @@ function App() {
           <CatalogProvider>
             <CartProvider>
               <WishlistProvider>
+                <AppBootLoader />
                 <Router>
                   <CartDrawerProvider>
                     <SkipLink />
@@ -81,7 +95,9 @@ function App() {
                       <Routes>
                         {/* ─── Storefront ─── */}
                         <Route path="/" element={<Home />} />
-                        <Route path="/collections" element={<ProductListing />} />
+                        <Route path="/shop" element={<ProductListing />} />
+                        <Route path="/collections" element={<LegacyCollectionsIndexRedirect />} />
+                        <Route path="/collections/:slug" element={<CollectionDetail />} />
                         <Route path="/cart" element={<Cart />} />
                         <Route path="/wishlist" element={<Wishlist />} />
                         <Route path="/product/:id" element={<ProductDetails />} />

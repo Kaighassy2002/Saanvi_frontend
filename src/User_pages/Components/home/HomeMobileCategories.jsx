@@ -19,7 +19,7 @@ function FeaturedCategoryTile({ chip, freeShippingThreshold }) {
 
   return (
     <Link
-      to={chip.link || '/collections?sort=latest'}
+      to={chip.link || '/shop?sort=latest'}
       className="home-mobile-cat-tile home-mobile-cat-tile--featured"
       aria-label={label}
     >

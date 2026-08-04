@@ -406,54 +406,115 @@
 
 
 
-/* ─── Shared product grids (collections, recommendations, etc.) ─── */
+/* ─── Shared product grids — product list size ─── */
 
 .storefront-products-grid,
-.collection-products-grid {
+.collection-products-grid,
+.wishlist-page__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.65rem 0.55rem;
 }
 
 .storefront-products-grid > *,
-.collection-products-grid > * {
+.collection-products-grid > *,
+.wishlist-page__grid > * {
   min-width: 0;
   max-width: 100%;
 }
 
 @media (min-width: 640px) {
   .storefront-products-grid,
-  .collection-products-grid {
+  .collection-products-grid,
+  .wishlist-page__grid {
     gap: 1rem;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .storefront-products-grid,
-  .collection-products-grid {
+  .collection-products-grid,
+  .wishlist-page__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
   .storefront-products-grid,
-  .collection-products-grid {
+  .collection-products-grid,
+  .wishlist-page__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.25rem 0.75rem;
   }
 }
 
+/* ─── Home desktop product grid — smaller cards ─── */
 
+.home-desktop-product-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem 0.65rem;
+}
 
-/* ─── Desktop compact cards — all storefront pages ─── */
+.home-desktop-product-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (min-width: 1280px) {
+  .home-desktop-product-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1.05rem 0.7rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .home-desktop-product-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1.15rem 0.75rem;
+  }
+}
+
+.home-desktop .home-mobile-feed-card__media {
+  aspect-ratio: 3 / 3.4;
+  margin-bottom: 0.3rem;
+  border-radius: 0.5rem;
+}
+
+.home-desktop .home-mobile-feed-card__brand {
+  font-size: 0.625rem;
+}
+
+.home-desktop .home-mobile-feed-card__title {
+  font-size: 0.5625rem;
+}
+
+.home-desktop .home-mobile-feed-card__price {
+  font-size: 0.6875rem;
+}
+
+.home-desktop .home-mobile-feed-card__strike,
+.home-desktop .home-mobile-feed-card__discount {
+  font-size: 0.5625rem;
+}
+
+.home-desktop .home-mobile-feed-card__wishlist {
+  width: 1.35rem;
+  height: 1.35rem;
+  font-size: 0.5625rem;
+}
+
+/* ─── Desktop product cards — match product list card size ─── */
 
 @media (min-width: 1024px) {
+  .home-mobile-feed-card__media,
   .storefront-feed--compact .home-mobile-feed-card__media {
     aspect-ratio: 3 / 3.55;
     margin-bottom: 0.35rem;
     border-radius: 0.6rem;
   }
 
+  .home-mobile-feed-card__wishlist,
   .storefront-feed--compact .home-mobile-feed-card__wishlist {
     top: 0.35rem;
     right: 0.35rem;
@@ -462,6 +523,7 @@
     font-size: 0.625rem;
   }
 
+  .home-mobile-feed-card__rating,
   .storefront-feed--compact .home-mobile-feed-card__rating {
     left: 0.35rem;
     bottom: 0.35rem;
@@ -469,10 +531,12 @@
     font-size: 0.5625rem;
   }
 
+  .home-mobile-feed-card__rating i,
   .storefront-feed--compact .home-mobile-feed-card__rating i {
     font-size: 0.4375rem;
   }
 
+  .home-mobile-feed-card__oos,
   .storefront-feed--compact .home-mobile-feed-card__oos {
     left: 0.35rem;
     top: 0.35rem;
@@ -480,37 +544,46 @@
     padding: 0.15rem 0.35rem;
   }
 
+  .home-mobile-feed-card__body,
   .storefront-feed--compact .home-mobile-feed-card__body {
     padding: 0.1rem 0.05rem 0;
   }
 
+  .home-mobile-feed-card__brand,
   .storefront-feed--compact .home-mobile-feed-card__brand {
     font-size: 0.6875rem;
   }
 
+  .home-mobile-feed-card__title,
   .storefront-feed--compact .home-mobile-feed-card__title {
     margin-top: 0.1rem;
     font-size: 0.625rem;
   }
 
+  .home-mobile-feed-card__variant,
   .storefront-feed--compact .home-mobile-feed-card__variant {
     font-size: 0.5625rem;
   }
 
+  .home-mobile-feed-card__prices,
   .storefront-feed--compact .home-mobile-feed-card__prices {
     gap: 0.15rem 0.3rem;
     margin-top: 0.3rem;
   }
 
+  .home-mobile-feed-card__price,
   .storefront-feed--compact .home-mobile-feed-card__price {
     font-size: 0.75rem;
   }
 
+  .home-mobile-feed-card__strike,
+  .home-mobile-feed-card__discount,
   .storefront-feed--compact .home-mobile-feed-card__strike,
   .storefront-feed--compact .home-mobile-feed-card__discount {
     font-size: 0.625rem;
   }
 
+  .home-mobile-feed-card__drop,
   .storefront-feed--compact .home-mobile-feed-card__drop {
     margin-top: 0.2rem;
     font-size: 0.5625rem;

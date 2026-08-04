@@ -41,7 +41,7 @@ function FreeShippingProgress({ subtotal }) {
         />
       </div>
       {!qualified ? (
-        <Link to="/collections" className="mt-2 inline-block font-sans text-xs font-medium text-[#7a2c3a] hover:underline">
+        <Link to="/shop" className="mt-2 inline-block font-sans text-xs font-medium text-[#7a2c3a] hover:underline">
           Continue shopping
         </Link>
       ) : null}

@@ -16,7 +16,7 @@ function HomeMobilePromos() {
         overline="Limited time"
         title={copy.title || 'Offers for you'}
         linkLabel={copy.linkLabel || 'See all'}
-        linkHref={copy.linkUrl || '/collections'}
+        linkHref={copy.linkUrl || '/shop'}
       />
       <div className="home-mobile-promo-list">
         {promoBanners.map((banner, index) => (

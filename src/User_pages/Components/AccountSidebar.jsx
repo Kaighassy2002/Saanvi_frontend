@@ -47,7 +47,7 @@ function AccountSidebar({ active = 'orders' }) {
         <p className="account-sidebar__label">Shop</p>
         <ul className="account-nav">
           <li className="account-nav__item">
-            <Link to="/collections" className="account-nav__link">
+            <Link to="/shop" className="account-nav__link">
               <span className="account-nav__icon" aria-hidden>
                 <i className="fa-solid fa-gem" />
               </span>

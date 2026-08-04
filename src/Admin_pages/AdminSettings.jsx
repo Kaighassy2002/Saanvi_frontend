@@ -309,7 +309,7 @@ function AdminSettings() {
                 </SettingsField>
                 <SettingsField
                   label="Link URL"
-                  hint="Internal path (/collections) or full URL (https://…)"
+                  hint="Internal path (/shop, /collections/slug) or full URL (https://…)"
                   htmlFor="announcement-link-url"
                 >
                   <input
@@ -317,7 +317,7 @@ function AdminSettings() {
                     className={INPUT_CLASS}
                     value={form.announcementLinkUrl}
                     onChange={(e) => setField('announcementLinkUrl', e.target.value)}
-                    placeholder="/collections"
+                    placeholder="/shop"
                     disabled={!form.announcementEnabled}
                   />
                 </SettingsField>
@@ -502,39 +502,28 @@ function AdminSettings() {
         {tab === 'integrations' ? (
           <SettingsSection
             title="Connected services"
-            description="Secrets stay on the server (.env). This panel shows live status only."
+            description="Integration details are managed securely on the server."
           >
-            <div className="space-y-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <IntegrationCard
                 name="Razorpay"
-                description="UPI, cards, and netbanking at checkout."
+                icon="fa-solid fa-credit-card"
                 configured={integrations?.razorpay?.configured || razorpay?.enabled}
-                detail={integrations?.razorpay?.keyId || razorpay?.keyId}
-                envHint="RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET"
               />
               <IntegrationCard
                 name="Email (Gmail)"
-                description="Order confirmations, status updates, and password reset OTP."
+                icon="fa-solid fa-envelope"
                 configured={integrations?.email?.configured}
-                detail={
-                  integrations?.email?.adminNotifyEmail
-                    ? `Admin alerts → ${integrations.email.adminNotifyEmail}`
-                    : null
-                }
-                envHint="GMAIL_USER + GMAIL_APP_PASSWORD"
               />
               <IntegrationCard
                 name="Cloudinary"
-                description="Product, hero, and category image uploads in admin."
+                icon="fa-solid fa-cloud"
                 configured={integrations?.cloudinary?.configured}
-                detail={integrations?.cloudinary?.cloudName}
-                envHint="CLOUDINARY_CLOUD_NAME + API key/secret"
               />
               <IntegrationCard
                 name="Delhivery"
-                description="Courier AWB generation from order detail."
+                icon="fa-solid fa-truck-fast"
                 configured={integrations?.couriers?.delhivery}
-                envHint="DELHIVERY_API_TOKEN"
               />
             </div>
           </SettingsSection>

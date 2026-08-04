@@ -97,7 +97,7 @@ function ProductListing() {
       }
     }
     return {
-      title: 'Shop collections',
+      title: 'Shop jewellery',
       description: `Browse our full jewellery collection at ${STORE_NAME}. Necklaces, earrings, rings, and more.`,
     }
   }, [searchTerm, selectedCategory])
@@ -250,7 +250,7 @@ function ProductListing() {
       ? selectedCategory
       : searchTerm
         ? `“${searchTerm}”`
-        : 'All Collections'
+        : 'All Jewellery'
 
   const filterPanelProps = {
     availability,
@@ -502,7 +502,7 @@ function ProductListing() {
           <nav aria-label="Breadcrumb" className="collection-myntra__breadcrumb">
             <Link to="/">Home</Link>
             <span aria-hidden>/</span>
-            <Link to="/collections">Collections</Link>
+            <Link to="/shop">Shop</Link>
             {selectedCategory !== 'All' ? (
               <>
                 <span aria-hidden>/</span>

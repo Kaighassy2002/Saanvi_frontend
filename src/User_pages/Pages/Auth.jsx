@@ -707,7 +707,7 @@ function Auth() {
                 </p>
               ) : (
                 <p className="auth-page__footer-hint lg:hidden">
-                  <Link to="/collections">Continue shopping</Link> without signing in
+                  <Link to="/shop">Continue shopping</Link> without signing in
                 </p>
               )}
 
@@ -728,7 +728,7 @@ function Auth() {
                   </>
                 ) : (
                   <>
-                    <Link to="/collections">Continue shopping</Link> without signing in
+                    <Link to="/shop">Continue shopping</Link> without signing in
                   </>
                 )}
               </p>

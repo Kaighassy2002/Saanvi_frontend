@@ -441,7 +441,7 @@ function CheckOut() {
             </div>
             <h2 className="card-heading">Your cart is empty</h2>
             <p className="mt-2 text-helper">Add pieces from our collections before checkout.</p>
-            <Link to="/collections" className="lux-button mt-6 inline-flex">
+            <Link to="/shop" className="lux-button mt-6 inline-flex">
               Continue shopping
             </Link>
           </div>
