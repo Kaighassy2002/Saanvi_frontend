@@ -350,6 +350,12 @@
     overflow-x: auto;
     padding-bottom: 0.35rem;
     scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .home-featured-collections__rail::-webkit-scrollbar {
+    display: none;
   }
 
   .home-featured-collections__rail > li {

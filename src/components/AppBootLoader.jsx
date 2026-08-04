@@ -1,13 +1,13 @@
-import { useContext, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useStoreSettings } from '../context/storeSettingsContext'
-import { useCustomerAuth } from '../context/CustomerAuthProvider'
-import { CatalogContext } from '../context/catalogContext'
 
 export const BOOT_LOADER_ID = 'app-boot-loader'
 const BODY_CLASS = 'app-boot-loading'
-const MIN_VISIBLE_MS = 700
-const MAX_WAIT_MS = 8000
-const FADE_MS = 600
+/** Brand moment on first paint */
+const MIN_VISIBLE_MS = 1600
+/** Upper bound if settings are slow */
+const MAX_WAIT_MS = 5000
+const FADE_MS = 550
 
 export function hideBootLoader(el = document.getElementById(BOOT_LOADER_ID)) {
   if (!el || el.dataset.hiding === '1') return
@@ -27,21 +27,16 @@ export function hideBootLoader(el = document.getElementById(BOOT_LOADER_ID)) {
   }
 
   el.addEventListener('transitionend', onEnd)
-  window.setTimeout(remove, FADE_MS + 80)
+  window.setTimeout(remove, FADE_MS + 100)
 }
 
 /**
- * Hides the HTML boot splash once store settings, customer session,
- * and (in local demo) catalog data are ready.
+ * Hides the HTML boot splash once store settings are ready (or a short
+ * max wait). Auth and catalog continue in the background — home already
+ * uses skeletons for progressive content.
  */
 export default function AppBootLoader() {
   const { ready: settingsReady } = useStoreSettings()
-  const auth = useCustomerAuth()
-  const catalog = useContext(CatalogContext)
-
-  const authReady = !auth?.loading
-  const catalogReady = !catalog?.loading
-  const appReady = settingsReady && authReady && catalogReady
 
   useEffect(() => {
     const el = document.getElementById(BOOT_LOADER_ID)
@@ -52,7 +47,7 @@ export default function AppBootLoader() {
     let hideTimer
     const forceTimer = window.setTimeout(() => hideBootLoader(el), MAX_WAIT_MS)
 
-    if (appReady) {
+    if (settingsReady) {
       const wait = Math.max(0, MIN_VISIBLE_MS - performance.now())
       hideTimer = window.setTimeout(() => hideBootLoader(el), wait)
     }
@@ -61,7 +56,7 @@ export default function AppBootLoader() {
       window.clearTimeout(hideTimer)
       window.clearTimeout(forceTimer)
     }
-  }, [appReady])
+  }, [settingsReady])
 
   return null
 }
