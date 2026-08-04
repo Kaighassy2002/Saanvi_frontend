@@ -21,6 +21,7 @@ import {
   customerPatchMeRequest,
   unwrapCustomerApi,
 } from '../../services/customerProfileApi'
+import PasswordInput from '../../components/PasswordInput'
 
 const emptyAddressForm = () => ({
   label: '',
@@ -815,12 +816,10 @@ function UserProfile() {
                       <label className="form-label" htmlFor="pwd-current">
                         Current password
                       </label>
-                      <input
+                      <PasswordInput
                         id="pwd-current"
-                        type="password"
                         value={pwdCurrent}
                         onChange={(e) => setPwdCurrent(e.target.value)}
-                        className="royal-input"
                         autoComplete="current-password"
                         required
                       />
@@ -829,12 +828,10 @@ function UserProfile() {
                       <label className="form-label" htmlFor="pwd-new">
                         New password
                       </label>
-                      <input
+                      <PasswordInput
                         id="pwd-new"
-                        type="password"
                         value={pwdNew}
                         onChange={(e) => setPwdNew(e.target.value)}
-                        className="royal-input"
                         autoComplete="new-password"
                         required
                         minLength={8}
@@ -844,12 +841,10 @@ function UserProfile() {
                       <label className="form-label" htmlFor="pwd-confirm">
                         Confirm new password
                       </label>
-                      <input
+                      <PasswordInput
                         id="pwd-confirm"
-                        type="password"
                         value={pwdConfirm}
                         onChange={(e) => setPwdConfirm(e.target.value)}
-                        className="royal-input"
                         autoComplete="new-password"
                         required
                         minLength={8}

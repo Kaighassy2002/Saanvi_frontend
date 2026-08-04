@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PasswordInput from '../components/PasswordInput'
 import { useAdminAuth } from '../context/AdminAuthProvider'
 
 function AdminLogin() {
@@ -51,14 +52,13 @@ function AdminLogin() {
             </div>
             <div>
               <label className="form-label" htmlFor="admin-password">Password</label>
-              <input
+              <PasswordInput
                 id="admin-password"
-                type="password"
                 required
-                className="royal-input"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
               />
             </div>
             <button type="submit" className="lux-button w-full" disabled={loading}>

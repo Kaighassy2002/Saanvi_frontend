@@ -15,6 +15,7 @@ import {
   customerForgotPasswordVerifyOtp,
   customerForgotPasswordReset,
 } from '../../services/jewelleryApi'
+import PasswordInput from '../../components/PasswordInput'
 import '../Styles/auth-page.css'
 import '../Styles/footer-brand.css'
 
@@ -555,13 +556,11 @@ function Auth() {
                           </button>
                         ) : null}
                       </div>
-                      <input
+                      <PasswordInput
                         id="auth-password"
-                        type="password"
                         autoComplete={isRegister ? 'new-password' : 'current-password'}
                         required
                         minLength={8}
-                        className="royal-input"
                         placeholder={isRegister ? 'At least 8 characters' : 'Your password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -656,12 +655,10 @@ function Auth() {
                       <label className="form-label" htmlFor="forgot-new-password">
                         New password
                       </label>
-                      <input
+                      <PasswordInput
                         id="forgot-new-password"
-                        type="password"
                         required
                         minLength={8}
-                        className="royal-input"
                         value={forgotNewPassword}
                         onChange={(e) => setForgotNewPassword(e.target.value)}
                         placeholder="At least 8 characters"
@@ -669,12 +666,10 @@ function Auth() {
                       <label className="form-label" htmlFor="forgot-confirm-password">
                         Confirm new password
                       </label>
-                      <input
+                      <PasswordInput
                         id="forgot-confirm-password"
-                        type="password"
                         required
                         minLength={8}
-                        className="royal-input"
                         value={forgotConfirmPassword}
                         onChange={(e) => setForgotConfirmPassword(e.target.value)}
                         placeholder="Re-enter new password"
